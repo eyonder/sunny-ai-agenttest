@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
     <title>SunExpress Test - AI Agent</title>
     <style>
         /* Genel Tasarım Ayarları (Görsel Odaklı) */
         body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f0f5f9; user-select: none; }
-        .top-bar { background-color: #004b87; color: white; padding: 10px 20px; font-size: 14px; }
+        .top-bar { background-color: #004b87; color: white; padding: 10px 20px; font-size: 14px; display: flex; justify-content: space-between; align-items: center;}
         .nav-bar { background-color: white; padding: 15px 40px; display: flex; justify-content: space-between; border-bottom: 2px solid #e0e0e0; }
         .logo { font-size: 24px; font-weight: bold; color: #004b87; }
         .hero-section { padding: 40px; text-align: center; }
@@ -16,53 +15,103 @@
         .btn-mock { background-color: #e55a00; color: white; border: none; padding: 15px 30px; border-radius: 25px; font-weight: bold; font-size: 16px; opacity: 0.8; }
         .promo-banner { background-color: #004b87; color: white; max-width: 900px; margin: 20px auto; padding: 30px; border-radius: 15px; text-align: left; position: relative; background-image: linear-gradient(to right, #004b87, #0073cc); }
         .test-warning { text-align: center; color: #d32f2f; font-weight: bold; margin-top: 20px; padding: 10px; background: #ffebee; border-radius: 5px; }
+        
+        /* Test Butonları İçin Stil */
+        .lang-test-btns button {
+            background-color: white;
+            color: #004b87;
+            border: 1px solid white;
+            padding: 5px 10px;
+            margin-left: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .lang-test-btns button:hover { background-color: #e0e0e0; }
     </style>
 </head>
 <body>
 
-    <div class="top-bar">Güncel Seyahat Bilgilendirmesi</div>
-    <div class="nav-bar">
-        <div class="logo">SunExpress Hava Yolları</div>
-        <div style="color: #666;">Seyahat İşlemleri | Keşfedin | Bilgi</div>
+<div class="top-bar">
+    <div>Güncel Seyahat Bilgilendirmesi</div>
+    <div class="lang-test-btns">
+        Test URL Değiştir: 
+        <button onclick="changeUrlPath('/tr-TR')">/tr-TR</button>
+        <button onclick="changeUrlPath('/de-DE')">/de-DE</button>
+        <button onclick="changeUrlPath('/en-EN')">/en-EN</button>
     </div>
+</div>
 
-    <div class="test-warning">
-        ⚠️ DİKKAT: Bu bir test ortamıdır. Sayfadaki butonlar devre dışıdır. Lütfen sadece sağ alt köşedeki Yapay Zeka (AI Agent) ile etkileşime geçiniz.
+<div class="nav-bar">
+    <div class="logo">SunExpress Hava Yolları</div>
+    <div style="color: #666;">Seyahat İşlemleri | Keşfedin | Bilgi</div>
+</div>
+
+<div class="test-warning">
+    ⚠️ DİKKAT: Bu bir test ortamıdır. Sayfadaki butonlar devre dışıdır. Lütfen sadece sağ alt köşedeki Yapay Zeka (AI Agent) ile etkileşime geçiniz.
+    <br><span id="current-lang-info" style="color: #333; font-size: 14px; font-weight: normal;"></span>
+</div>
+
+<div class="hero-section">
+    <div class="search-box">
+        <div class="input-mock"><strong>Nereden:</strong> İstanbul-Sabiha Gökçen SAW</div>
+        <div class="input-mock"><strong>Nereye:</strong> Nereye</div>
+        <div class="input-mock"><strong>Tarih:</strong> 11.03.2026 - 14.03.2026</div>
+        <button class="btn-mock">Uçuş Ara</button>
     </div>
+</div>
 
-    <div class="hero-section">
-        <div class="search-box">
-            <div class="input-mock"><strong>Nereden:</strong> İstanbul-Sabiha Gökçen SAW</div>
-            <div class="input-mock"><strong>Nereye:</strong> Nereye</div>
-            <div class="input-mock"><strong>Tarih:</strong> 11.03.2026 - 14.03.2026</div>
-            <button class="btn-mock">Uçuş Ara</button>
-        </div>
-    </div>
+<div class="promo-banner">
+    <h2 style="margin:0;">İspanya'yı Keşfedin</h2>
+    <p>BAGAJ DAHİL 79,99 €*DAN İTİBAREN</p>
+    <button style="background:#e55a00; color:white; border:none; padding:10px 20px; border-radius:20px; font-weight:bold;">Hemen Keşfet</button>
+</div>
 
-    <div class="promo-banner">
-        <h2 style="margin:0;">İspanya'yı Keşfedin</h2>
-        <p>BAGAJ DAHİL 79,99 €*DAN İTİBAREN</p>
-        <button style="background:#e55a00; color:white; border:none; padding:10px 20px; border-radius:20px; font-weight:bold;">Hemen Keşfet</button>
-    </div>
+<script type='text/javascript'>
+    // 1. URL Path'ini değiştiren ve sayfayı yenileyen fonksiyon (Test Butonları İçin)
+    function changeUrlPath(newPath) {
+        // Not: Eğer bu dosyayı bilgisayarınızda "file:///" dizininden çalıştırıyorsanız 
+        // pathname değiştirmek dosyayı bulamamasına sebep olabilir.
+        // Gerçek bir web sunucusunda (localhost veya qa ortamı) sorunsuz çalışacaktır.
+        window.history.pushState({}, '', newPath);
+        window.location.reload(); 
+    }
 
-    <script type='text/javascript'>
-        function initEmbeddedMessaging() {
-            try {
-                embeddedservice_bootstrap.settings.language = 'en_US'; // For example, enter 'en' or 'en-US'
+    // 2. URL'e bakarak dili belirleyen fonksiyon
+    function getLanguageFromPath() {
+        const path = window.location.pathname.toLowerCase();
+        
+        if (path.includes('tr-tr')) {
+            return 'tr'; // Salesforce'un Türkçe için beklediği kod
+        } else if (path.includes('de-de')) {
+            return 'de'; // Salesforce'un Almanca için beklediği kod
+        } else {
+            return 'en_US'; // Varsayılan değer (en-EN vb. durumlar için)
+        }
+    }
 
-                embeddedservice_bootstrap.init(
-                    '00D7Z0000004r8W',
-                    'Sunexpress_Web_Channel_V2D',
-                    'https://sunexpress--qa.sandbox.my.site.com/ESWSunexpressWebChannel1773001853439',
-                    {
-                        scrt2URL: 'https://sunexpress--qa.sandbox.my.salesforce-scrt.com'
-                    }
-                );
-            } catch (err) {
-                console.error('Error loading Embedded Messaging: ', err);
-            }
-        };
-    </script>
-    <script type='text/javascript' src='https://sunexpress--qa.sandbox.my.site.com/ESWSunexpressWebChannel1773001853439/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
-    </body>
+    function initEmbeddedMessaging() {
+        try {
+            // 3. Statik dil değerini dinamik fonksiyon ile değiştiriyoruz.
+            const currentLang = getLanguageFromPath();
+            embeddedservice_bootstrap.settings.language = currentLang; 
+            
+            // Test için ekrana hangi dilin seçildiğini yazdıralım
+            document.getElementById('current-lang-info').innerText = "Mevcut URL'den algılanan dil kodu: " + currentLang;
+
+            embeddedservice_bootstrap.init(
+                '00D7Z0000004r8W',
+                'Sunexpress_Web_Channel_V2D',
+                'https://sunexpress--qa.sandbox.my.site.com/ESWSunexpressWebChannel1773001853439',
+                {
+                    scrt2URL: 'https://sunexpress--qa.sandbox.my.salesforce-scrt.com'
+                }
+            );
+        } catch (err) {
+            console.error('Error loading Embedded Messaging: ', err);
+        }
+    };
+</script>
+<script type='text/javascript' src='https://sunexpress--qa.sandbox.my.site.com/ESWSunexpressWebChannel1773001853439/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
+</body>
 </html>
