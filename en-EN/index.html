@@ -92,7 +92,6 @@
             // 3. Dil tespiti yapılıyor ve Agent'a set ediliyor
             const currentLang = getLanguageFromPath();
             embeddedservice_bootstrap.settings.language = currentLang; 
-            window.APP_LANG = currentLang;
             // Bilgi mesajını ekrana yazdıralım
             document.getElementById('current-lang-info').innerText = "URL'den Algılanan Agent Dili: " + currentLang;
 
