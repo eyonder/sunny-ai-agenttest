@@ -86,6 +86,17 @@
             return 'en_US'; // Salesforce: Varsayılan İngilizce
         }
     }
+    window.addEventListener('message', function(event) {
+        if (event.data === 'GET_LANGUAGE') {
+            let currentLang = getLanguageFromPath();
+            if (currentLang === 'en_US') currentLang = 'en'; // LWC uyumluluğu için
+            
+            event.source.postMessage({ 
+                type: 'LANGUAGE_RESPONSE', 
+                lang: currentLang 
+            }, event.origin);
+        }
+    });
 
     function initEmbeddedMessaging() {
         try {
