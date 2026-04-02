@@ -74,7 +74,6 @@
         window.location.href = '/sunny-ai-agenttest/' + langFolder;
     }
 
-    // 2. URL yoluna (pathname) bakarak dili belirleyen fonksiyon
     function getLanguageFromPath() {
         const path = window.location.pathname.toLowerCase();
         
@@ -86,6 +85,19 @@
             return 'en_US'; // Salesforce: Varsayılan İngilizce
         }
     }
+
+    // --- YENİ EKLENEN LWC DİNLEYİCİSİ ---
+    window.addEventListener('message', function(event) {
+        if (event.data === 'GET_LANGUAGE') {
+            let currentLang = getLanguageFromPath();
+            if (currentLang === 'en_US') currentLang = 'en'; // LWC uyumluluğu için
+            
+            event.source.postMessage({ 
+                type: 'LANGUAGE_RESPONSE', 
+                lang: currentLang 
+            }, event.origin);
+        }
+    });
 
     function initEmbeddedMessaging() {
         try {
