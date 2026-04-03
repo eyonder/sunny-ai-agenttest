@@ -116,21 +116,6 @@
             // 3. Dil tespiti yapılıyor ve Agent'a set ediliyor
             const currentLang = getLanguageFromPath();
             embeddedservice_bootstrap.settings.language = currentLang; 
-
-            let headerText = 'Sunny'; // Varsayılan (TR)
-        if (currentLang === 'de') {
-            headerText = 'Digitaler Assistent Sunny';
-        } else if (currentLang === 'en_US' || currentLang === 'en') {
-            headerText = 'Digital Assistant Sunny';
-        }
-
-        // Karakter sınırı kontrolü: Eğer çok uzun gelirse sadece "Sunny" yapabilirsiniz.
-        // headerText = "Sunny"; 
-
-        // 3. MIAW Başlık ve Bağlam Ayarları
-        embeddedservice_bootstrap.settings.siteContext = {
-            columnName: headerText // Bazı sürümlerde başlığı bu tetikler
-        };
             
             // Bilgi mesajını ekrana yazdıralım
             document.getElementById('current-lang-info').innerText = "URL'den Algılanan Agent Dili: " + currentLang;
