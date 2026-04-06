@@ -98,6 +98,19 @@
         }
     });
 
+    window.addEventListener("onEmbeddedMessagingConversationStarted", (event) => {
+        console.log("Ana sayfada yakalandı Session ID:", event.detail.conversationId);
+        
+        const chatIframe = document.querySelector('iframe[name="embeddedServiceLiveAgentStateChat"]') || document.querySelector('iframe'); 
+        
+        if (chatIframe && chatIframe.contentWindow) {
+            chatIframe.contentWindow.postMessage({ 
+                type: 'SESSION_ID_RESPONSE', 
+                sessionId: event.detail.conversationId 
+            }, '*');
+        }
+    });
+
     // 2. URL yoluna (pathname) bakarak dili belirleyen fonksiyon
     function getLanguageFromPath() {
         const path = window.location.pathname.toLowerCase();

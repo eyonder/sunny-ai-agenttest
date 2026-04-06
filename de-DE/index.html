@@ -99,6 +99,19 @@
         }
     });
 
+    window.addEventListener("onEmbeddedMessagingConversationStarted", (event) => {
+        console.log("Ana sayfada yakalandı Session ID:", event.detail.conversationId);
+        
+        const chatIframe = document.querySelector('iframe[name="embeddedServiceLiveAgentStateChat"]') || document.querySelector('iframe'); 
+        
+        if (chatIframe && chatIframe.contentWindow) {
+            chatIframe.contentWindow.postMessage({ 
+                type: 'SESSION_ID_RESPONSE', 
+                sessionId: event.detail.conversationId 
+            }, '*');
+        }
+    });
+
     function initEmbeddedMessaging() {
         try {
             // 3. Dil tespiti yapılıyor ve Agent'a set ediliyor
