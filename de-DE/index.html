@@ -99,17 +99,13 @@
         }
     });
 
-    window.addEventListener("onEmbeddedMessagingConversationStarted", (event) => {
-        console.log("Ana sayfada yakalandı Session ID:", event.detail.conversationId);
-        
-        const chatIframe = document.getElementById('embeddedMessagingFrame');        
-        
-        if (chatIframe && chatIframe.contentWindow) {
-            chatIframe.contentWindow.postMessage({ 
-                type: 'SESSION_ID_RESPONSE', 
-                sessionId: event.detail.conversationId 
-            }, '*');
-        }
+    window.addEventListener('onEmbeddedMessagingReady', () => {
+        console.log('Widget hazır!');
+        // Artık conversation started'ı dinleyebilirsin
+        window.addEventListener('onEmbeddedMessagingConversationStarted', (event) => {
+            console.log('Session ID:', event.detail.conversationId);
+            this.msgSessionId = event.detail.conversationId;
+        });
     });
 
     function initEmbeddedMessaging() {
