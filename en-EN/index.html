@@ -99,9 +99,8 @@
     });
     window.addEventListener('onEmbeddedMessagingReady', () => {
         console.log('Widget hazır!');
-        // Artık conversation started'ı dinleyebilirsin
         window.addEventListener('onEmbeddedMessagingConversationStarted', (event) => {
-            console.log('Session ID:', event.detail.conversationId);
+            console.log('conversationId:', event.detail.conversationId);
             this.msgSessionId = event.detail.conversationId;
         });
     });
