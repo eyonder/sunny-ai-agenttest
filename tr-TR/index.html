@@ -112,12 +112,22 @@
 
     window.addEventListener('onEmbeddedMessagingReady', () => {
         console.log('Widget hazır!');
-        try {
-            embeddedservice_bootstrap.utilAPI.launchChat();
-            console.error('Chat otomatik açıldı mı ? :');
-        } catch (e) {
-            console.error('Chat otomatik açılamadı:', e);
-        }
+        const tryLaunchChat = () => {
+            try {
+                embeddedservice_bootstrap.utilAPI.launchChat()
+                    .then(() => {
+                        console.log('Chat otomatik olarak başarıyla açıldı!');
+                    })
+                    .catch((err) => {
+                        console.warn('Buton henüz sayfaya yüklenmedi, yarım saniye sonra tekrar deneniyor...');
+                        setTimeout(tryLaunchChat, 500); 
+                    });
+            } catch (e) {
+                console.error('API beklenmedik bir hata verdi:', e);
+            }
+        };
+
+        setTimeout(tryLaunchChat, 1000);
         window.addEventListener('onEmbeddedMessagingConversationStarted', (event) => {
             console.log('conversationId yakalandı:', event.detail.conversationId);
             _conversationId = event.detail.conversationId; // ID'yi global değişkene ata
