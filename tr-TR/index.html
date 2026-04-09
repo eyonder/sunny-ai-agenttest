@@ -112,11 +112,12 @@
 
     window.addEventListener('onEmbeddedMessagingReady', () => {
         console.log('Widget hazır!');
-         try {
-                embeddedservice_bootstrap.utilAPI.launchChat();
-            } catch (e) {
-                console.error('Chat otomatik açılamadı:', e);
-            }
+        try {
+            embeddedservice_bootstrap.utilAPI.launchChat();
+            console.error('Chat otomatik açıldı mı ? :');
+        } catch (e) {
+            console.error('Chat otomatik açılamadı:', e);
+        }
         window.addEventListener('onEmbeddedMessagingConversationStarted', (event) => {
             console.log('conversationId yakalandı:', event.detail.conversationId);
             _conversationId = event.detail.conversationId; // ID'yi global değişkene ata
