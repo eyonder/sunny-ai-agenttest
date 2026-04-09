@@ -112,15 +112,15 @@
 
     window.addEventListener('onEmbeddedMessagingReady', () => {
         console.log('Widget hazır!');
-        
-        window.addEventListener('onEmbeddedMessagingConversationStarted', (event) => {
-            console.log('conversationId yakalandı:', event.detail.conversationId);
-            _conversationId = event.detail.conversationId; // ID'yi global değişkene ata
-            try {
+         try {
                 embeddedservice_bootstrap.utilAPI.launchChat();
             } catch (e) {
                 console.error('Chat otomatik açılamadı:', e);
             }
+        window.addEventListener('onEmbeddedMessagingConversationStarted', (event) => {
+            console.log('conversationId yakalandı:', event.detail.conversationId);
+            _conversationId = event.detail.conversationId; // ID'yi global değişkene ata
+           
             // Sohbet başladıktan sonra LWC'ye (iframe içine) anlık olarak yeni ID'yi push et
             const iframes = document.querySelectorAll('iframe');
             iframes.forEach(iframe => {
