@@ -70,8 +70,8 @@
                 }
             };
 
-            setTimeout(tryLaunchChat, 50); 
-
+            //setTimeout(tryLaunchChat, 50); 
+            tryLaunchChat();
             window.addEventListener('onEmbeddedMessagingConversationStarted', (event) => {
                 console.log('conversationId yakalandı:', event.detail.conversationId);
                 _conversationId = event.detail.conversationId; 
