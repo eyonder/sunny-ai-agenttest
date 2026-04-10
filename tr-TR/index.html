@@ -3,13 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>SunExpress Test - AI Agent</title>
-    
-    <link rel="preconnect" href="https://sunexpress--qa.sandbox.my.site.com" crossorigin>
-    <link rel="preconnect" href="https://sunexpress--qa.sandbox.my.salesforce-scrt.com" crossorigin>
-    <link rel="preload" href="https://sunexpress--qa.sandbox.my.site.com/ESWSunexpressWebChannel1773001853439/assets/js/bootstrap.min.js" as="script">
-
     <style>
-        /* Stilleriniz aynı kalacak */
+        /* Genel Tasarım Ayarları */
         body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f0f5f9; user-select: none; }
         .top-bar { background-color: #004b87; color: white; padding: 10px 20px; font-size: 14px; display: flex; justify-content: space-between; align-items: center;}
         .nav-bar { background-color: white; padding: 15px 40px; display: flex; justify-content: space-between; border-bottom: 2px solid #e0e0e0; }
@@ -20,97 +15,20 @@
         .btn-mock { background-color: #e55a00; color: white; border: none; padding: 15px 30px; border-radius: 25px; font-weight: bold; font-size: 16px; opacity: 0.8; }
         .promo-banner { background-color: #004b87; color: white; max-width: 900px; margin: 20px auto; padding: 30px; border-radius: 15px; text-align: left; position: relative; background-image: linear-gradient(to right, #004b87, #0073cc); }
         .test-warning { text-align: center; color: #d32f2f; font-weight: bold; margin-top: 20px; padding: 10px; background: #ffebee; border-radius: 5px; }
-        .lang-test-btns button { background-color: white; color: #004b87; border: 1px solid white; padding: 5px 10px; margin-left: 5px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        
+        /* Test Butonları İçin Stil */
+        .lang-test-btns button {
+            background-color: white;
+            color: #004b87;
+            border: 1px solid white;
+            padding: 5px 10px;
+            margin-left: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
         .lang-test-btns button:hover { background-color: #e0e0e0; }
     </style>
-
-    <script defer type='text/javascript' src='https://sunexpress--qa.sandbox.my.site.com/ESWSunexpressWebChannel1773001853439/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
-
-    <script type='text/javascript'>
-        let _conversationId = null;
-
-        function changeUrlPath(langFolder) {
-            window.location.href = '/sunny-ai-agenttest/' + langFolder;
-        }
-
-        function getLanguageFromPath() {
-            const path = window.location.pathname.toLowerCase();
-            if (path.includes('/tr-tr')) return 'tr';
-            else if (path.includes('/de-de')) return 'de';
-            else return 'en_US';
-        }
-
-        window.addEventListener('message', function(event) {
-            let currentLang = getLanguageFromPath();
-            if (currentLang === 'en_US') currentLang = 'en';
-            
-            if (event.data === 'GET_LANGUAGE') {
-                event.source.postMessage({ type: 'LANGUAGE_RESPONSE', lang: currentLang }, event.origin);
-            }
-
-            if (event.data === 'GET_CHAT_DATA') {
-                event.source.postMessage({ type: 'CHAT_DATA_RESPONSE', lang: currentLang, conversationId: _conversationId }, event.origin);
-            }
-        });
-
-        window.addEventListener('onEmbeddedMessagingReady', () => {
-            console.log('Widget hazır!');
-            
-            const tryLaunchChat = () => {
-                try {
-                    embeddedservice_bootstrap.utilAPI.launchChat()
-                        .then(() => {
-                            console.log('Chat açıldı');
-                        })
-                        .catch((err) => {
-                            setTimeout(tryLaunchChat, 100);
-                        });
-                } catch (e) {
-                    console.error('Error:', e);
-                }
-            };
-
-            //setTimeout(tryLaunchChat, 50); 
-            tryLaunchChat();
-            window.addEventListener('onEmbeddedMessagingConversationStarted', (event) => {
-                console.log('conversationId yakalandı:', event.detail.conversationId);
-                _conversationId = event.detail.conversationId; 
-                
-                const iframes = document.querySelectorAll('iframe');
-                iframes.forEach(iframe => {
-                    if (iframe.contentWindow) {
-                        iframe.contentWindow.postMessage({
-                            type: 'CONVERSATION_ID_UPDATE',
-                            conversationId: _conversationId
-                        }, '*');
-                    }
-                });
-            });
-        });
-
-        function initEmbeddedMessaging() {
-            try {
-                const currentLang = getLanguageFromPath();
-                embeddedservice_bootstrap.settings.language = currentLang; 
-                
-                const infoElement = document.getElementById('current-lang-info');
-                if(infoElement) {
-                    infoElement.innerText = "URL'den Algılanan Agent Dili: " + currentLang;
-                }
-
-                embeddedservice_bootstrap.init(
-                    '00D7Z0000004r8W',
-                    'Sunexpress_Web_Channel_V2D',
-                    'https://sunexpress--qa.sandbox.my.site.com/ESWSunexpressWebChannel1773001853439',
-                    {
-                        scrt2URL: 'https://sunexpress--qa.sandbox.my.salesforce-scrt.com'
-                    }
-                );
-            } catch (err) {
-                console.error('Error loading Embedded Messaging: ', err);
-            }
-        };
-    </script>
 </head>
 <body>
 
@@ -149,5 +67,111 @@
     <button style="background:#e55a00; color:white; border:none; padding:10px 20px; border-radius:20px; font-weight:bold;">Hemen Keşfet</button>
 </div>
 
+<script type='text/javascript'>
+    let _conversationId = null;
+
+    // 1. İlgili klasöre yönlendirme yapan fonksiyon
+    function changeUrlPath(langFolder) {
+        // GitHub deponuzun ana dizinini baz alarak klasörlere yönlendirir
+        window.location.href = '/sunny-ai-agenttest/' + langFolder;
+    }
+
+    // 2. URL yoluna (pathname) bakarak dili belirleyen fonksiyon
+    function getLanguageFromPath() {
+        const path = window.location.pathname.toLowerCase();
+        
+        if (path.includes('/tr-tr')) {
+            return 'tr'; // Salesforce: Türkçe
+        } else if (path.includes('/de-de')) {
+            return 'de'; // Salesforce: Almanca
+        } else {
+            return 'en_US'; // Salesforce: Varsayılan İngilizce
+        }
+    }
+
+    // --- LWC DİNLEYİCİSİ ---
+    window.addEventListener('message', function(event) {
+        let currentLang = getLanguageFromPath();
+        if (currentLang === 'en_US') currentLang = 'en'; // LWC uyumluluğu için
+        
+        if (event.data === 'GET_LANGUAGE') {
+            event.source.postMessage({ 
+                type: 'LANGUAGE_RESPONSE', 
+                lang: currentLang 
+            }, event.origin);
+        }
+
+        if (event.data === 'GET_CHAT_DATA') {
+            event.source.postMessage({ 
+                type: 'CHAT_DATA_RESPONSE', 
+                lang: currentLang,
+                conversationId: _conversationId // Kaydedilen ID'yi gönder
+            }, event.origin);
+        }
+    });
+
+    window.addEventListener('onEmbeddedMessagingReady', () => {
+        console.log('Widget hazır!');
+        
+        const tryLaunchChat = () => {
+            try {
+                embeddedservice_bootstrap.utilAPI.launchChat()
+                    .then(() => {
+                        console.log('Chat açıldı');
+                    })
+                    .catch((err) => {
+                        setTimeout(tryLaunchChat, 500); 
+                    });
+            } catch (e) {
+                console.error('Error:', e);
+            }
+        };
+
+        setTimeout(tryLaunchChat, 1000);
+
+        window.addEventListener('onEmbeddedMessagingConversationStarted', (event) => {
+            console.log('conversationId yakalandı:', event.detail.conversationId);
+            _conversationId = event.detail.conversationId; // ID'yi global değişkene ata
+           
+            // Sohbet başladıktan sonra LWC'ye (iframe içine) anlık olarak yeni ID'yi push et
+            const iframes = document.querySelectorAll('iframe');
+            iframes.forEach(iframe => {
+                if (iframe.contentWindow) {
+                    iframe.contentWindow.postMessage({
+                        type: 'CONVERSATION_ID_UPDATE',
+                        conversationId: _conversationId
+                    }, '*');
+                }
+            });
+        });
+        
+    });
+
+    function initEmbeddedMessaging() {
+        try {
+            // 3. Dil tespiti yapılıyor ve Agent'a set ediliyor
+            const currentLang = getLanguageFromPath();
+            embeddedservice_bootstrap.settings.language = currentLang; 
+            
+            // Bilgi mesajını ekrana yazdıralım (Elementin sayfada olduğundan emin olmak için kontrol eklendi)
+            const infoElement = document.getElementById('current-lang-info');
+            if(infoElement) {
+                infoElement.innerText = "URL'den Algılanan Agent Dili: " + currentLang;
+            }
+
+            embeddedservice_bootstrap.init(
+                '00D7Z0000004r8W',
+                'Sunexpress_Web_Channel_V2D',
+                'https://sunexpress--qa.sandbox.my.site.com/ESWSunexpressWebChannel1773001853439',
+                {
+                    scrt2URL: 'https://sunexpress--qa.sandbox.my.salesforce-scrt.com'
+                }
+            );
+        } catch (err) {
+            console.error('Error loading Embedded Messaging: ', err);
+        }
+    };
+</script>
+<script type='text/javascript' src='https://sunexpress--qa.sandbox.my.site.com/ESWSunexpressWebChannel1773001853439/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
 </body>
 </html>
