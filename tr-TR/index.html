@@ -119,10 +119,7 @@
         }
     });
 
-    window.addEventListener('onEmbeddedMessagingReady', () => {
-        console.log('Widget hazır!');
-        
-        const tryLaunchChat = () => {
+    const tryLaunchChat = () => {
             try {
                 embeddedservice_bootstrap.utilAPI.launchChat()
                     .then(() => {
@@ -135,7 +132,11 @@
                 console.error('Error:', e);
             }
         };
-
+        
+    window.addEventListener('onEmbeddedMessagingReady', () => {
+        console.log('Widget hazır!');
+        
+        
         setTimeout(tryLaunchChat, 1000);
 
         window.addEventListener('onEmbeddedMessagingConversationStarted', (event) => {
