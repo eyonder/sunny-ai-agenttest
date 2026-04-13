@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-K44WHPV3');</script>
+    <!-- End Google Tag Manager -->
+
     <meta charset="UTF-8">
     <title>SunExpress Test - AI Agent</title>
     <style>
@@ -31,7 +39,11 @@
     </style>
 </head>
 <body>
-
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K44WHPV3"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+     
 <div class="top-bar">
     <div>Güncel Seyahat Bilgilendirmesi</div>
     <div class="lang-test-btns">
@@ -60,23 +72,14 @@
         <button class="btn-mock">Uçuş Ara</button>
     </div>
 </div>
-<div style="position: fixed; bottom: 35px; right: 35px; border-radius: 40px; background: #801818; cursor: pointer; color: white">
-         <div onclick="launchChat()">
-            <img 
-               src="<Please use your image>"
-               style="border-radius: 50%; float:left; margin: 5px;"
-               height="50px"
-               width="50px"/>
-	       <h3 style="float:right;">Hi, How can I help you?</h3>
-         </div>
-   </div>
+
 <div class="promo-banner">
     <h2 style="margin:0;">İspanya'yı Keşfedin</h2>
     <p>BAGAJ DAHİL 79,99 €*DAN İTİBAREN</p>
     <button style="background:#e55a00; color:white; border:none; padding:10px 20px; border-radius:20px; font-weight:bold;">Hemen Keşfet</button>
 </div>
 
-<script type='text/javascript'>
+<!-- <script type='text/javascript'>
     let _conversationId = null;
 
     // 1. İlgili klasöre yönlendirme yapan fonksiyon
@@ -118,24 +121,6 @@
             }, event.origin);
         }
     });
-
-
-    function launchChat() {
-           embeddedservice_bootstrap.utilAPI.launchChat()
-               .then(() => {
-                   console.log(
-                       'Successfully launched Messaging'
-                   );
-               }).catch(() => {
-                   console.log(
-                       'Some error occurred when launching Messaging'
-                   );
-               }).finally(() => {
-                   console.log(
-                       'Successfully launched Messaging - Finally'
-                   );
-               });
-       }
 
     window.addEventListener('onEmbeddedMessagingReady', () => {
         console.log('Widget hazır!');
@@ -179,7 +164,7 @@
             // 3. Dil tespiti yapılıyor ve Agent'a set ediliyor
             const currentLang = getLanguageFromPath();
             embeddedservice_bootstrap.settings.language = currentLang; 
-            embeddedservice_bootstrap.settings.hideChatButtonOnLoad = true;
+            
             // Bilgi mesajını ekrana yazdıralım (Elementin sayfada olduğundan emin olmak için kontrol eklendi)
             const infoElement = document.getElementById('current-lang-info');
             if(infoElement) {
@@ -199,6 +184,6 @@
         }
     };
 </script>
-<script type='text/javascript' src='https://sunexpress--qa.sandbox.my.site.com/ESWSunexpressWebChannel1773001853439/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
+<script type='text/javascript' src='https://sunexpress--qa.sandbox.my.site.com/ESWSunexpressWebChannel1773001853439/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script> -->
 </body>
 </html>
