@@ -84,6 +84,11 @@
         // GitHub deponuzun ana dizinini baz alarak klasörlere yönlendirir
         window.location.href = '/sunny-ai-agenttest/' + langFolder;
     }
+
+    window.addEventListener("onEmbeddedMessagingReady", () => {
+    // Salesforce tam yüklenmeye hazırlanırken bu ayarı veriyoruz:
+    window.embeddedservice_bootstrap.settings.displayHelpButton = false;
+});
 </script>
 
 <!-- <script type='text/javascript'>
