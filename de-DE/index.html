@@ -12,8 +12,26 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
     <meta charset="UTF-8">
     <title>SunExpress Test - AI Agent</title>
+Kusura bakmayın, yanlış anlamışım! Sitenin orijinal yapısına ve diğer sınıflarına (.search-box, .top-bar vb.) hiç dokunmadan, sadece AI Agent (Yapay Zeka) widget'ının genişlik, yükseklik ve konumlandırmasını istediğiniz ölçülere göre ekliyorum.
+
+(Not: Sadece mobilde @media sorgularının çalışabilmesi için <head> etiketinin içine viewport metasını ekledim, geri kalan kod tamamen sizin orijinal kodunuzdur.)
+
+İşte sadece AI Agent boyutlandırmasını içeren güncel kodunuz:
+
+HTML
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-PK6SNFGP');</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SunExpress Test - AI Agent</title>
     <style>
-        /* Genel Tasarım Ayarları */
+        /* Genel Tasarım Ayarları (Sizin orijinal kodunuz, dokunulmadı) */
         body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f0f5f9; user-select: none; }
         .top-bar { background-color: #004b87; color: white; padding: 10px 20px; font-size: 14px; display: flex; justify-content: space-between; align-items: center;}
         .nav-bar { background-color: white; padding: 15px 40px; display: flex; justify-content: space-between; border-bottom: 2px solid #e0e0e0; }
@@ -37,6 +55,43 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             font-weight: bold;
         }
         .lang-test-btns button:hover { background-color: #e0e0e0; }
+
+        /* ========================================= */
+        /* AI AGENT BOYUT VE KONUM AYARLARI          */
+        /* ========================================= */
+
+        /* Desktop (Varsayılan - 1024px ve üzeri) */
+        #ai-agent {
+            position: fixed;
+            width: 375px;
+            height: 550px;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999;
+            /* Test için eklendi, sonradan silebilirsiniz: */
+            background-color: white; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        /* Tablet (768px - 1023px) */
+        @media (max-width: 1023px) and (min-width: 768px) {
+            #ai-agent {
+                width: 350px;
+                height: 520px;
+                bottom: 16px;
+                right: 16px;
+            }
+        }
+
+        /* Mobile (767px ve altı) */
+        @media (max-width: 767px) {
+            #ai-agent {
+                width: 100%;
+                height: 100%;
+                bottom: 0;
+                right: 0;
+                border-radius: 0; /* Tam ekranda kenar kıvrımını sıfırlar */
+            }
+        }
     </style>
 </head>
 <body>
