@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SunExpress Test - AI Agent</title>
     <style>
-        /* Genel Tasarım Ayarları (Masaüstü için aynı bırakıldı) */
+        /* Genel Tasarım Ayarları */
         body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f0f5f9; user-select: none; }
         .top-bar { background-color: #004b87; color: white; padding: 10px 20px; font-size: 14px; display: flex; justify-content: space-between; align-items: center;}
         .nav-bar { background-color: white; padding: 15px 40px; display: flex; justify-content: space-between; border-bottom: 2px solid #e0e0e0; align-items: center; }
@@ -35,115 +35,102 @@
         }
         .lang-test-btns button:hover { background-color: #e0e0e0; }
 
-        /* ========================================= */
-        /* RESPONSIVE (TABLET VE MOBİL) TASARIM      */
-        /* ========================================= */
-
-        /* Tabletler için (Max 992px) */
-        @media (max-width: 992px) {
-            .search-box {
-                flex-wrap: wrap; /* Sığmazsa alt satıra geçmesini sağlar */
-            }
-            .input-mock {
-                flex: 1 1 45%; /* Yan yana iki kutu olacak şekilde ayarlar */
-            }
-            .btn-mock {
-                flex: 1 1 100%; /* Butonu alt satırda tam genişlik yapar */
-            }
-            .promo-banner {
-                margin: 20px;
-            }
-            .test-warning {
-                margin: 20px;
-            }
+        /* --- Yeni Eklenen Sunny Buton Stili --- */
+        .sunny-trigger-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: #e55a00;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            z-index: 9999;
+            transition: transform 0.2s;
+        }
+        .sunny-trigger-btn:hover {
+            transform: scale(1.05);
+            background-color: #ff6a00;
         }
 
-        /* Akıllı Telefonlar için (Max 768px) */
+        /* Responsive Tasarım */
+        @media (max-width: 992px) {
+            .search-box { flex-wrap: wrap; }
+            .input-mock { flex: 1 1 45%; }
+            .btn-mock { flex: 1 1 100%; }
+            .promo-banner, .test-warning { margin: 20px; }
+        }
+
         @media (max-width: 768px) {
-            .top-bar {
-                flex-direction: column;
-                text-align: center;
-                gap: 10px;
-            }
-            .lang-test-btns {
-                justify-content: center;
-            }
-            .nav-bar {
-                flex-direction: column;
-                padding: 15px 20px;
-                gap: 10px;
-                text-align: center;
-            }
-            .hero-section {
-                padding: 20px;
-            }
-            .search-box {
-                flex-direction: column; /* Arama kutularını dikey dizer */
-                padding: 15px;
-            }
-            .input-mock {
-                width: 100%;
-                box-sizing: border-box;
-                flex: 1 1 100%;
-            }
-            .btn-mock {
-                width: 100%;
-            }
-            .promo-banner {
-                text-align: center;
-                padding: 20px;
-            }
-            .promo-banner button {
-                width: 100%;
-                margin-top: 15px;
-            }
+            .top-bar, .nav-bar { flex-direction: column; text-align: center; gap: 10px; }
+            .lang-test-btns { justify-content: center; }
+            .hero-section { padding: 20px; }
+            .search-box { flex-direction: column; padding: 15px; }
+            .input-mock, .btn-mock { width: 100%; box-sizing: border-box; flex: 1 1 100%; }
+            .promo-banner { text-align: center; padding: 20px; }
+            .promo-banner button { width: 100%; margin-top: 15px; }
+            .sunny-trigger-btn { bottom: 20px; right: 20px; padding: 12px 20px; }
         }
     </style>
 </head>
 <body>
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PK6SNFGP"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
     <div class="top-bar">
-    <div>Güncel Seyahat Bilgilendirmesi</div>
-    <div class="lang-test-btns">
-        <span>Site Dilini Değiştir:</span>
-        <button onclick="changeUrlPath('tr-TR')">/tr-TR</button>
-        <button onclick="changeUrlPath('de-DE')">/de-DE</button>
-        <button onclick="changeUrlPath('en-EN')">/en-EN</button>
+        <div>Güncel Seyahat Bilgilendirmesi</div>
+        <div class="lang-test-btns">
+            <span>Site Dilini Değiştir:</span>
+            <button onclick="changeUrlPath('tr-TR')">/tr-TR</button>
+            <button onclick="changeUrlPath('de-DE')">/de-DE</button>
+            <button onclick="changeUrlPath('en-EN')">/en-EN</button>
+        </div>
     </div>
-</div>
 
-<div class="nav-bar">
-    <div class="logo">SunExpress Hava Yolları</div>
-    <div style="color: #666; font-size: 14px;">Seyahat İşlemleri | Keşfedin | Bilgi</div>
-</div>
-
-<div class="test-warning">
-    ⚠️ DİKKAT: Bu bir test ortamıdır. Sayfadaki butonlar devre dışıdır. Lütfen sadece sağ alt köşedeki Yapay Zeka (AI Agent) ile etkileşime geçiniz.
-    <br><span id="current-lang-info" style="color: #333; font-size: 14px; font-weight: normal;"></span>
-</div>
-
-<div class="hero-section">
-    <div class="search-box">
-        <div class="input-mock"><strong>Nereden:</strong><br>İstanbul-Sabiha Gökçen SAW</div>
-        <div class="input-mock"><strong>Nereye:</strong><br>Seçiniz</div>
-        <div class="input-mock"><strong>Tarih:</strong><br>11.03.2026 - 14.03.2026</div>
-        <button class="btn-mock">Uçuş Ara</button>
+    <div class="nav-bar">
+        <div class="logo">SunExpress Hava Yolları</div>
+        <div style="color: #666; font-size: 14px;">Seyahat İşlemleri | Keşfedin | Bilgi</div>
     </div>
-</div>
 
-<div class="promo-banner">
-    <h2 style="margin:0; margin-bottom: 10px;">İspanya'yı Keşfedin</h2>
-    <p style="margin-top: 0;">BAGAJ DAHİL 79,99 €*DAN İTİBAREN</p>
-    <button style="background:#e55a00; color:white; border:none; padding:10px 20px; border-radius:20px; font-weight:bold; cursor:pointer;">Hemen Keşfet</button>
-</div>
+    <div class="test-warning">
+        ⚠️ DİKKAT: Bu bir test ortamıdır. Sayfadaki butonlar devre dışıdır. Lütfen sağ alt köşedeki Sunny (AI Agent) butonunu kullanın.
+        <br><span id="current-lang-info" style="color: #333; font-size: 14px; font-weight: normal;"></span>
+    </div>
 
-<script>
-    function changeUrlPath(langFolder) {
-        // GitHub deponuzun ana dizinini baz alarak klasörlere yönlendirir
-        window.location.href = '/sunny-ai-agenttest/' + langFolder;
+    <div class="hero-section">
+        <div class="search-box">
+            <div class="input-mock"><strong>Nereden:</strong><br>İstanbul-Sabiha Gökçen SAW</div>
+            <div class="input-mock"><strong>Nereye:</strong><br>Seçiniz</div>
+            <div class="input-mock"><strong>Tarih:</strong><br>11.03.2026 - 14.03.2026</div>
+            <button class="btn-mock">Uçuş Ara</button>
+        </div>
+    </div>
+
+    <div class="promo-banner">
+        <h2 style="margin:0; margin-bottom: 10px;">İspanya'yı Keşfedin</h2>
+        <p style="margin-top: 0;">BAGAJ DAHİL 79,99 €*DAN İTİBAREN</p>
+        <button style="background:#e55a00; color:white; border:none; padding:10px 20px; border-radius:20px; font-weight:bold; cursor:pointer;">Hemen Keşfet</button>
+    </div>
+
+    <button class="sunny-trigger-btn" onclick="handleOpenChat()">Sunny</button>
+
+    <script>
+        function changeUrlPath(langFolder) {
+            window.location.href = '/sunny-ai-agenttest/' + langFolder;
+        }
+
+        function handleOpenChat() {
+        if (typeof window.openSalesforceChat === "function") {
+            window.openSalesforceChat();
+        } else {
+            console.warn("Salesforce openSalesforceChat fonksiyonu bulunamadı.");
+        }
     }
-</script>
+    </script>
 
 
 <!-- <script type='text/javascript'>
