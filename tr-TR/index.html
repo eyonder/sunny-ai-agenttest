@@ -9,26 +9,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SunExpress Test - AI Agent</title>
-<style>
-        /* Genel Tasarım Ayarları (Sizin orijinal kodunuz, dokunulmadı) */
+    <style>
+        /* ========================================= */
+        /* GENEL TASARIM AYARLARI                    */
+        /* ========================================= */
         body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f0f5f9; user-select: none; }
         .top-bar { background-color: #004b87; color: white; padding: 10px 20px; font-size: 14px; display: flex; justify-content: space-between; align-items: center;}
-        .nav-bar { background-color: white; padding: 15px 40px; display: flex; justify-content: space-between; border-bottom: 2px solid #e0e0e0; }
+        .nav-bar { background-color: white; padding: 15px 40px; display: flex; justify-content: space-between; border-bottom: 2px solid #e0e0e0; align-items: center; }
         .logo { font-size: 24px; font-weight: bold; color: #004b87; }
         .hero-section { padding: 40px; text-align: center; }
-        .search-box { background-color: white; border-radius: 12px; padding: 20px; max-width: 900px; margin: 0 auto; box-shadow: 0 4px 10px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: space-between; border: 1px solid #ddd; }
-        .input-mock { padding: 15px; border: 1px solid #ccc; border-radius: 5px; flex-grow: 1; margin: 0 10px; color: #555; background-color: #fafafa;}
-        .btn-mock { background-color: #e55a00; color: white; border: none; padding: 15px 30px; border-radius: 25px; font-weight: bold; font-size: 16px; opacity: 0.8; }
-        .promo-banner { background-color: #004b87; color: white; max-width: 900px; margin: 20px auto; padding: 30px; border-radius: 15px; text-align: left; position: relative; background-image: linear-gradient(to right, #004b87, #0073cc); }
-        .test-warning { text-align: center; color: #d32f2f; font-weight: bold; margin-top: 20px; padding: 10px; background: #ffebee; border-radius: 5px; }
+        .search-box { background-color: white; border-radius: 12px; padding: 20px; max-width: 900px; margin: 0 auto; box-shadow: 0 4px 10px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: space-between; border: 1px solid #ddd; gap: 10px;}
+        .input-mock { padding: 15px; border: 1px solid #ccc; border-radius: 5px; flex-grow: 1; color: #555; background-color: #fafafa; text-align: left;}
+        .btn-mock { background-color: #e55a00; color: white; border: none; padding: 15px 30px; border-radius: 25px; font-weight: bold; font-size: 16px; opacity: 0.8; cursor: pointer;}
+        .promo-banner { background-color: #004b87; color: white; max-width: 900px; margin: 20px auto; padding: 30px; border-radius: 15px; text-align: left; position: relative; background-image: linear-gradient(to right, #004b87, #0073cc); box-sizing: border-box;}
+        .test-warning { text-align: center; color: #d32f2f; font-weight: bold; margin-top: 20px; padding: 10px; background: #ffebee; border-radius: 5px; max-width: 900px; margin-left: auto; margin-right: auto; box-sizing: border-box;}
         
         /* Test Butonları İçin Stil */
+        .lang-test-btns { display: flex; align-items: center; flex-wrap: wrap; gap: 5px; }
         .lang-test-btns button {
             background-color: white;
             color: #004b87;
             border: 1px solid white;
             padding: 5px 10px;
-            margin-left: 5px;
             border-radius: 5px;
             cursor: pointer;
             font-weight: bold;
@@ -36,40 +38,71 @@
         .lang-test-btns button:hover { background-color: #e0e0e0; }
 
         /* ========================================= */
-        /* AI AGENT BOYUT VE KONUM AYARLARI          */
+        /* AI AGENT WIDGET TASARIMI                  */
         /* ========================================= */
-
-        /* Desktop (Varsayılan - 1024px ve üzeri) */
-        #ai-agent {
+        
+        /* Masaüstü (Desktop) - Default Değerler (>= 1024px) */
+        #ai-agent-widget {
             position: fixed;
-            width: 375px;
-            height: 550px;
             bottom: 20px;
             right: 20px;
+            width: 375px;
+            height: 550px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            border: 1px solid #ddd;
             z-index: 9999;
-            /* Test için eklendi, sonradan silebilirsiniz: */
-            background-color: white; border: 1px solid #ccc; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
+
+        /* Widget İçi Sahte Tasarım (Görsellik için eklendi) */
+        .ai-header { background-color: #e55a00; color: white; padding: 15px; font-weight: bold; text-align: center;}
+        .ai-body { flex-grow: 1; padding: 15px; background-color: #fafafa; color: #666; display: flex; align-items: center; justify-content: center; text-align: center;}
+
+        /* ========================================= */
+        /* RESPONSIVE TASARIM (MEDYA SORGULARI)      */
+        /* ========================================= */
 
         /* Tablet (768px - 1023px) */
         @media (max-width: 1023px) and (min-width: 768px) {
-            #ai-agent {
+            #ai-agent-widget {
                 width: 350px;
                 height: 520px;
                 bottom: 16px;
                 right: 16px;
             }
+            
+            /* Sitenin diğer kısımları için tablet ayarı */
+            .search-box { flex-wrap: wrap; }
+            .input-mock { flex: 1 1 45%; }
+            .btn-mock { flex: 1 1 100%; }
+            .promo-banner, .test-warning { margin: 20px; }
         }
 
-        /* Mobile (767px ve altı) */
+        /* Mobil (<= 767px) */
         @media (max-width: 767px) {
-            #ai-agent {
+            #ai-agent-widget {
                 width: 100%;
                 height: 100%;
                 bottom: 0;
                 right: 0;
-                border-radius: 0; /* Tam ekranda kenar kıvrımını sıfırlar */
+                border-radius: 0; /* Tam ekranda köşe ovalliği kaldırılır */
+                border: none;
             }
+
+            /* Sitenin diğer kısımları için mobil ayarı */
+            .top-bar { flex-direction: column; text-align: center; gap: 10px; }
+            .lang-test-btns { justify-content: center; }
+            .nav-bar { flex-direction: column; padding: 15px 20px; gap: 10px; text-align: center; }
+            .hero-section { padding: 20px; }
+            .search-box { flex-direction: column; padding: 15px; }
+            .input-mock { width: 100%; box-sizing: border-box; flex: 1 1 100%; }
+            .btn-mock { width: 100%; }
+            .promo-banner { text-align: center; padding: 20px; }
+            .promo-banner button { width: 100%; margin-top: 15px; }
         }
     </style>
 </head>
@@ -111,13 +144,22 @@
     <button style="background:#e55a00; color:white; border:none; padding:10px 20px; border-radius:20px; font-weight:bold; cursor:pointer;">Hemen Keşfet</button>
 </div>
 
+<div id="ai-agent-widget">
+    <div class="ai-header">SunExpress AI Asistan</div>
+    <div class="ai-body">
+        Chat arayüzü buraya yüklenecek...<br><br>
+        (Masaüstü: 375x550px)<br>
+        (Tablet: 350x520px)<br>
+        (Mobil: %100 Tam Ekran)
+    </div>
+</div>
+
 <script>
     function changeUrlPath(langFolder) {
         // GitHub deponuzun ana dizinini baz alarak klasörlere yönlendirir
         window.location.href = '/sunny-ai-agenttest/' + langFolder;
     }
 </script>
-
 
 <!-- <script type='text/javascript'>
     let _conversationId = null;
