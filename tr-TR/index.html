@@ -10,9 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SunExpress Test - AI Agent</title>
     <style>
-        /* ========================================= */
-        /* GENEL TASARIM AYARLARI                    */
-        /* ========================================= */
+        /* Genel Tasarım Ayarları (Masaüstü için aynı bırakıldı) */
         body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f0f5f9; user-select: none; }
         .top-bar { background-color: #004b87; color: white; padding: 10px 20px; font-size: 14px; display: flex; justify-content: space-between; align-items: center;}
         .nav-bar { background-color: white; padding: 15px 40px; display: flex; justify-content: space-between; border-bottom: 2px solid #e0e0e0; align-items: center; }
@@ -38,71 +36,67 @@
         .lang-test-btns button:hover { background-color: #e0e0e0; }
 
         /* ========================================= */
-        /* AI AGENT WIDGET TASARIMI                  */
-        /* ========================================= */
-        
-        /* Masaüstü (Desktop) - Default Değerler (>= 1024px) */
-        #ai-agent-widget {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 375px;
-            height: 550px;
-            background-color: #ffffff;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-            border-radius: 12px;
-            border: 1px solid #ddd;
-            z-index: 9999;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Widget İçi Sahte Tasarım (Görsellik için eklendi) */
-        .ai-header { background-color: #e55a00; color: white; padding: 15px; font-weight: bold; text-align: center;}
-        .ai-body { flex-grow: 1; padding: 15px; background-color: #fafafa; color: #666; display: flex; align-items: center; justify-content: center; text-align: center;}
-
-        /* ========================================= */
-        /* RESPONSIVE TASARIM (MEDYA SORGULARI)      */
+        /* RESPONSIVE (TABLET VE MOBİL) TASARIM      */
         /* ========================================= */
 
-        /* Tablet (768px - 1023px) */
-        @media (max-width: 1023px) and (min-width: 768px) {
-            #ai-agent-widget {
-                width: 350px;
-                height: 520px;
-                bottom: 16px;
-                right: 16px;
+        /* Tabletler için (Max 992px) */
+        @media (max-width: 992px) {
+            .search-box {
+                flex-wrap: wrap; /* Sığmazsa alt satıra geçmesini sağlar */
             }
-            
-            /* Sitenin diğer kısımları için tablet ayarı */
-            .search-box { flex-wrap: wrap; }
-            .input-mock { flex: 1 1 45%; }
-            .btn-mock { flex: 1 1 100%; }
-            .promo-banner, .test-warning { margin: 20px; }
+            .input-mock {
+                flex: 1 1 45%; /* Yan yana iki kutu olacak şekilde ayarlar */
+            }
+            .btn-mock {
+                flex: 1 1 100%; /* Butonu alt satırda tam genişlik yapar */
+            }
+            .promo-banner {
+                margin: 20px;
+            }
+            .test-warning {
+                margin: 20px;
+            }
         }
 
-        /* Mobil (<= 767px) */
-        @media (max-width: 767px) {
-            #ai-agent-widget {
+        /* Akıllı Telefonlar için (Max 768px) */
+        @media (max-width: 768px) {
+            .top-bar {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+            .lang-test-btns {
+                justify-content: center;
+            }
+            .nav-bar {
+                flex-direction: column;
+                padding: 15px 20px;
+                gap: 10px;
+                text-align: center;
+            }
+            .hero-section {
+                padding: 20px;
+            }
+            .search-box {
+                flex-direction: column; /* Arama kutularını dikey dizer */
+                padding: 15px;
+            }
+            .input-mock {
                 width: 100%;
-                height: 100%;
-                bottom: 0;
-                right: 0;
-                border-radius: 0; /* Tam ekranda köşe ovalliği kaldırılır */
-                border: none;
+                box-sizing: border-box;
+                flex: 1 1 100%;
             }
-
-            /* Sitenin diğer kısımları için mobil ayarı */
-            .top-bar { flex-direction: column; text-align: center; gap: 10px; }
-            .lang-test-btns { justify-content: center; }
-            .nav-bar { flex-direction: column; padding: 15px 20px; gap: 10px; text-align: center; }
-            .hero-section { padding: 20px; }
-            .search-box { flex-direction: column; padding: 15px; }
-            .input-mock { width: 100%; box-sizing: border-box; flex: 1 1 100%; }
-            .btn-mock { width: 100%; }
-            .promo-banner { text-align: center; padding: 20px; }
-            .promo-banner button { width: 100%; margin-top: 15px; }
+            .btn-mock {
+                width: 100%;
+            }
+            .promo-banner {
+                text-align: center;
+                padding: 20px;
+            }
+            .promo-banner button {
+                width: 100%;
+                margin-top: 15px;
+            }
         }
     </style>
 </head>
@@ -142,16 +136,6 @@
     <h2 style="margin:0; margin-bottom: 10px;">İspanya'yı Keşfedin</h2>
     <p style="margin-top: 0;">BAGAJ DAHİL 79,99 €*DAN İTİBAREN</p>
     <button style="background:#e55a00; color:white; border:none; padding:10px 20px; border-radius:20px; font-weight:bold; cursor:pointer;">Hemen Keşfet</button>
-</div>
-
-<div id="ai-agent-widget">
-    <div class="ai-header">SunExpress AI Asistan</div>
-    <div class="ai-body">
-        Chat arayüzü buraya yüklenecek...<br><br>
-        (Masaüstü: 375x550px)<br>
-        (Tablet: 350x520px)<br>
-        (Mobil: %100 Tam Ekran)
-    </div>
 </div>
 
 <script>
