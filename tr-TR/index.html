@@ -1,11 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!--
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
     j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-PK6SNFGP');</script>
+    
+    -->
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SunExpress Test - AI Agent</title>
@@ -78,8 +82,11 @@
     </style>
 </head>
 <body>
+    <!--
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PK6SNFGP"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    -->
+    
 
     <div class="top-bar">
         <div>Güncel Seyahat Bilgilendirmesi</div>
@@ -130,7 +137,199 @@
             console.warn("Salesforce openSalesforceChat fonksiyonu bulunamadı.");
         }
     }
+    </script>
+
+
+
+    <script type='text/javascript'>
+  (function() {
+    var _conversationId = null;
+    var _chatReady = false;
+
+
+    window.addEventListener('onEmbeddedMessagingButtonCreated', function() {
+        console.log('Baloncuk oluşturuldu, şimdi gizleniyor...');
+        if (window.embeddedservice_bootstrap && embeddedservice_bootstrap.utilAPI) {
+            embeddedservice_bootstrap.utilAPI.hideChatButton();
+        }
+    });
+
+    function getLanguageFromPath() {
+        var path = window.location.pathname.toLowerCase();
+        if (path.indexOf('/tr-tr') > -1) return 'tr';
+        if (path.indexOf('/de-de') > -1) return 'de';
+        return 'en_US';
+    }
+
+    window.addEventListener('message', function(event) {
+        var currentLang = getLanguageFromPath();
+        if (currentLang === 'en_US') currentLang = 'en';
+
+        if (event.data === 'GET_LANGUAGE') {
+            event.source.postMessage({ type: 'LANGUAGE_RESPONSE', lang: currentLang }, event.origin);
+        }
+        if (event.data === 'GET_CHAT_DATA') {
+            event.source.postMessage({
+                type: 'CHAT_DATA_RESPONSE',
+                lang: currentLang,
+                conversationId: _conversationId
+            }, event.origin);
+        }
+
+
+        if (event.data.type === 'FORCE_HIDE_WIDGET') {
+            var container = document.querySelector('.embeddedServiceSidebarMinimizedDefaultUI') ||
+                            document.querySelector('embeddedservice-chat-container') ||
+                            document.querySelector('.embeddedMessagingFrame');
+
+            if (container) {
+                container.style.display = 'none';
+            }
+            if (window.embeddedservice_bootstrap && embeddedservice_bootstrap.utilAPI) {
+                embeddedservice_bootstrap.utilAPI.hideChatButton();
+            }
+        }
+
+
+        if (event.data.type === 'HIDE_CHAT_BUTTON') {
+            setTimeout(function() {
+                try {
+                    if (window.embeddedservice_bootstrap && embeddedservice_bootstrap.utilAPI) {
+                        embeddedservice_bootstrap.utilAPI.hideChatButton();
+                        console.log('Buton gizleme komutu gecikmeli olarak çalıştırıldı.');
+                    }
+                } catch(e) {
+                    console.error('Buton gizlenemedi:', e);
+                }
+            }, 100);
+        }
+
+        if (event.data && event.data.type === 'FORCE_HIDE_CHAT') {
+            if (window.embeddedservice_bootstrap && embeddedservice_bootstrap.utilAPI) {
+                embeddedservice_bootstrap.utilAPI.hideChatButton();
+            }
+        }
+    });
+
+var _isProcessing = false; 
+
+window.openSalesforceChat = function() {
+    var container = document.querySelector('embeddedservice-chat-container') || 
+                    document.querySelector('.embeddedMessagingFrame');
+
+
+    if (container && container.style.display === 'none') {
+        container.style.display = 'block';
+        
+
+        if (window.embeddedservice_bootstrap && embeddedservice_bootstrap.utilAPI) {
+             embeddedservice_bootstrap.utilAPI.launchChat(); 
+        }
+    } 
+
+    else {
+        if (window.embeddedservice_bootstrap && embeddedservice_bootstrap.utilAPI) {
+            embeddedservice_bootstrap.utilAPI.launchChat();
+        }
+    }
+};
+
+
+window.triggerChatDoubleCall = function() {
+    if (_isProcessing) return; 
+    
+    _isProcessing = true;
+    console.log("Chat açılış tetiklendi (1. çağrı)...");
+    window.openSalesforceChat();
+
+
+    setTimeout(function() {
+        console.log("Chat açılış zorlanıyor (2. çağrı)...");
+        window.openSalesforceChat();
+        
+
+        _isProcessing = false; 
+    }, 100); 
+};
+
+    
+    window.addEventListener('onEmbeddedMessagingWindowMinimized', function() {
+        console.log('Chat küçültüldü, buton gizleniyor...');
+        setTimeout(function() {
+            try {
+                if (window.embeddedservice_bootstrap && embeddedservice_bootstrap.utilAPI) {
+                    embeddedservice_bootstrap.utilAPI.hideChatButton();
+                }
+            } catch(e) {
+                console.error('Buton gizlenemedi:', e);
+            }
+        }, 300);
+    });
+
+    window.addEventListener('onEmbeddedMessagingReady', function() {
+        _chatReady = true;
+
+        window.addEventListener('onEmbeddedMessagingConversationStarted', function(event) {
+            _conversationId = event.detail.conversationId;
+            var iframes = document.querySelectorAll('iframe');
+            for (var i = 0; i < iframes.length; i++) {
+                var iframe = iframes[i];
+                if (iframe.contentWindow) {
+                    iframe.contentWindow.postMessage({
+                        type: 'CONVERSATION_ID_UPDATE',
+                        conversationId: _conversationId
+                    }, '*');
+                }
+            }
+        });
+    });
+
+    window.initEmbeddedMessaging = function() {
+        try {
+            var currentLang = getLanguageFromPath();
+            embeddedservice_bootstrap.settings.language = currentLang;
+            embeddedservice_bootstrap.settings.hideChatButtonOnLoad = true;
+            embeddedservice_bootstrap.settings.enableUserInputForConversationWithBot = false;  
+          
+var style = document.createElement('style');
+style.innerHTML = '#embedded-messaging { z-index: 999999 !important; } .embeddedMessagingFrame { z-index: 999999 !important; } .embeddedMessagingConversationButtonWrapper { z-index: 999999 !important; }';
+document.head.appendChild(style);
+          
+          
+          
+          
+            embeddedservice_bootstrap.init(
+                '00D7Z0000004r8W',
+                'Sunexpress_Web_Channel_V2D',
+                'https://sunexpress--qa.sandbox.my.site.com/ESWSunexpressWebChannel1773001853439',
+                { scrt2URL: 'https://sunexpress--qa.sandbox.my.salesforce-scrt.com' }
+            );
+        } catch (err) {
+            console.error('Error loading Embedded Messaging: ', err);
+        }
+    };
+
+
+  })();
 </script>
+
+<script type='text/javascript' src='https://sunexpress--qa.sandbox.my.site.com/ESWSunexpressWebChannel1773001853439/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <!-- <script type='text/javascript'>
     let _conversationId = null;
 
