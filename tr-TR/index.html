@@ -126,9 +126,8 @@
     <button class="sunny-trigger-btn" onclick="handleOpenChat()">Sunny</button>
 
     <script>
-
         let botInactivityTimer;
-        const TIMEOUT_SECONDS = 10; // Test için 1 dakika
+        const TIMEOUT_SECONDS = 20; // Test için 10 saniye
         let timeLeft = TIMEOUT_SECONDS;
         let isChatEndedByTimer = false;
 
@@ -152,25 +151,38 @@
                 if (timeLeft <= 0) {
                     clearInterval(botInactivityTimer);
                     isChatEndedByTimer = true;
-                                        
+                                                
                     const messagePayload = { type: 'AGENTFORCE_TIMEOUT_TRIGGERED' };
 
+                    // Host window'a gönder
                     window.postMessage(messagePayload, '*');
                     
+                    // Sayfadaki tüm iframe'lere (Chat LWC'sine) gönder
                     document.querySelectorAll('iframe').forEach(iframe => {
                         try {
                             iframe.contentWindow.postMessage(messagePayload, '*');
                         } catch(e) {
+                            // Cross-origin güvenlik hatalarını yoksay
                         }
                     });
                 }
             }, 1000);
         }
 
+        // 1. Ana web sitesindeki fare, klavye ve tıklama hareketlerini dinle
         window.addEventListener('mousemove', resetBotTimer);
         window.addEventListener('keydown', resetBotTimer);
         window.addEventListener('click', resetBotTimer);
 
+        // 2. Chat (Iframe) içine girildiğinde odağı yakalayarak sayacı sıfırla
+        setInterval(() => {
+            if (document.activeElement && document.activeElement.tagName === 'IFRAME') {
+                console.log('[Chat Timer] 💬 Kullanıcı Iframe içinde aktif! Sayaç sıfırlanıyor...');
+                resetBotTimer(); 
+            }
+        }, 1000);
+
+        // Sistemi başlat
         resetBotTimer();
 
         function changeUrlPath(langFolder) {
