@@ -154,15 +154,12 @@
                                                 
                     const messagePayload = { type: 'AGENTFORCE_TIMEOUT_TRIGGERED' };
 
-                    // Host window'a gönder
                     window.postMessage(messagePayload, '*');
                     
-                    // Sayfadaki tüm iframe'lere (Chat LWC'sine) gönder
                     document.querySelectorAll('iframe').forEach(iframe => {
                         try {
                             iframe.contentWindow.postMessage(messagePayload, '*');
                         } catch(e) {
-                            // Cross-origin güvenlik hatalarını yoksay
                         }
                     });
                 }
