@@ -136,7 +136,7 @@
             if (isChatEndedByTimer) return;
 
             timeLeft = TIMEOUT_SECONDS;
-            console.log(`[Chat Timer] 🔄 Hareket algılandı, sayaç sıfırlandı. Kalan: ${timeLeft} sn`);
+            console.log(`Hareket algılandı, sayaç sıfırlandı. Kalan: ${timeLeft} sn`);
 
             clearInterval(botInactivityTimer);
 
@@ -151,10 +151,8 @@
 
                 if (timeLeft <= 0) {
                     clearInterval(botInactivityTimer);
-                    isChatEndedByTimer = true; // Sayacı tamamen kilitle
-                    
-                    console.log('🚨 [Chat Timer] Süre doldu! Kapatma sinyali LWC ve Iframe lere gönderiliyor...');
-                    
+                    isChatEndedByTimer = true;
+                                        
                     const messagePayload = { type: 'AGENTFORCE_TIMEOUT_TRIGGERED' };
 
                     window.postMessage(messagePayload, '*');
@@ -169,12 +167,10 @@
             }, 1000);
         }
 
-        // Kullanıcı etkileşimlerinde sayacı sıfırla
         window.addEventListener('mousemove', resetBotTimer);
         window.addEventListener('keydown', resetBotTimer);
         window.addEventListener('click', resetBotTimer);
 
-        // Sayacı başlat
         resetBotTimer();
 
         function changeUrlPath(langFolder) {
