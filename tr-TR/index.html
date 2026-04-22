@@ -128,35 +128,54 @@
     <script>
 
         let botInactivityTimer;
-        const TIMEOUT_SECONDS = 60;
+        const TIMEOUT_SECONDS = 60; // Test için 1 dakika
         let timeLeft = TIMEOUT_SECONDS;
+        let isChatEndedByTimer = false;
 
         function resetBotTimer() {
+            if (isChatEndedByTimer) return;
+
             timeLeft = TIMEOUT_SECONDS;
             console.log(`[Chat Timer] 🔄 Hareket algılandı, sayaç sıfırlandı. Kalan: ${timeLeft} sn`);
 
             clearInterval(botInactivityTimer);
 
             botInactivityTimer = setInterval(() => {
+                if (isChatEndedByTimer) {
+                    clearInterval(botInactivityTimer);
+                    return;
+                }
+
                 timeLeft--;
-                
-                
                 console.log(`[Chat Timer] ⏳ Kapanmaya kalan süre: ${timeLeft} sn`);
 
                 if (timeLeft <= 0) {
                     clearInterval(botInactivityTimer);
-                    console.log('🚨 [Chat Timer] Süre doldu! Kapatma sinyali (AGENTFORCE_TIMEOUT_TRIGGERED) gönderiliyor...');
-                    window.postMessage({ type: 'AGENTFORCE_TIMEOUT_TRIGGERED' }, '*');
+                    isChatEndedByTimer = true; // Sayacı tamamen kilitle
+                    
+                    console.log('🚨 [Chat Timer] Süre doldu! Kapatma sinyali LWC ve Iframe lere gönderiliyor...');
+                    
+                    const messagePayload = { type: 'AGENTFORCE_TIMEOUT_TRIGGERED' };
+
+                    window.postMessage(messagePayload, '*');
+                    
+                    document.querySelectorAll('iframe').forEach(iframe => {
+                        try {
+                            iframe.contentWindow.postMessage(messagePayload, '*');
+                        } catch(e) {
+                        }
+                    });
                 }
             }, 1000);
         }
 
+        // Kullanıcı etkileşimlerinde sayacı sıfırla
         window.addEventListener('mousemove', resetBotTimer);
         window.addEventListener('keydown', resetBotTimer);
         window.addEventListener('click', resetBotTimer);
 
+        // Sayacı başlat
         resetBotTimer();
-
 
         function changeUrlPath(langFolder) {
             window.location.href = '/sunny-ai-agenttest/' + langFolder;
