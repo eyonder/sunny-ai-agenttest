@@ -126,6 +126,27 @@
     <button class="sunny-trigger-btn" onclick="handleOpenChat()">Sunny</button>
 
     <script>
+
+        let botInactivityTimer;
+        const TIMEOUT_DURATION = 1 * 60 * 1000; // 5 dakika
+
+        function resetBotTimer() {
+            clearTimeout(botInactivityTimer);
+            botInactivityTimer = setTimeout(() => {
+                // 5 dakika dolduğunda tüm window'a bir mesaj yayınla
+                window.postMessage({ type: 'AGENTFORCE_TIMEOUT_TRIGGERED' }, '*');
+            }, TIMEOUT_DURATION);
+        }
+
+        // Kullanıcı etkileşimlerinde sayacı sıfırla
+        window.addEventListener('mousemove', resetBotTimer);
+        window.addEventListener('keydown', resetBotTimer);
+        window.addEventListener('click', resetBotTimer);
+
+        // Sayacı başlat
+        resetBotTimer();
+
+
         function changeUrlPath(langFolder) {
             window.location.href = '/sunny-ai-agenttest/' + langFolder;
         }
