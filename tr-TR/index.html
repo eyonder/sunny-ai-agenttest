@@ -128,22 +128,33 @@
     <script>
 
         let botInactivityTimer;
-        const TIMEOUT_DURATION = 1 * 60 * 1000; // 5 dakika
+        const TIMEOUT_SECONDS = 60;
+        let timeLeft = TIMEOUT_SECONDS;
 
         function resetBotTimer() {
-            clearTimeout(botInactivityTimer);
-            botInactivityTimer = setTimeout(() => {
-                // 5 dakika dolduğunda tüm window'a bir mesaj yayınla
-                window.postMessage({ type: 'AGENTFORCE_TIMEOUT_TRIGGERED' }, '*');
-            }, TIMEOUT_DURATION);
+            timeLeft = TIMEOUT_SECONDS;
+            console.log(`[Chat Timer] 🔄 Hareket algılandı, sayaç sıfırlandı. Kalan: ${timeLeft} sn`);
+
+            clearInterval(botInactivityTimer);
+
+            botInactivityTimer = setInterval(() => {
+                timeLeft--;
+                
+                
+                console.log(`[Chat Timer] ⏳ Kapanmaya kalan süre: ${timeLeft} sn`);
+
+                if (timeLeft <= 0) {
+                    clearInterval(botInactivityTimer);
+                    console.log('🚨 [Chat Timer] Süre doldu! Kapatma sinyali (AGENTFORCE_TIMEOUT_TRIGGERED) gönderiliyor...');
+                    window.postMessage({ type: 'AGENTFORCE_TIMEOUT_TRIGGERED' }, '*');
+                }
+            }, 1000);
         }
 
-        // Kullanıcı etkileşimlerinde sayacı sıfırla
         window.addEventListener('mousemove', resetBotTimer);
         window.addEventListener('keydown', resetBotTimer);
         window.addEventListener('click', resetBotTimer);
 
-        // Sayacı başlat
         resetBotTimer();
 
 
