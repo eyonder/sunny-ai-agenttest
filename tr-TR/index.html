@@ -126,58 +126,7 @@
     <button class="sunny-trigger-btn" onclick="handleOpenChat()">Sunny</button>
 
     <script>
-        let botInactivityTimer;
-        const TIMEOUT_SECONDS = 20;
-        let timeLeft = TIMEOUT_SECONDS;
-        let isChatEndedByTimer = false;
 
-        function resetBotTimer() {
-            if (isChatEndedByTimer) return;
-
-            timeLeft = TIMEOUT_SECONDS;
-            console.log(`Hareket algılandı, sayaç sıfırlandı. Kalan: ${timeLeft} sn`);
-
-            clearInterval(botInactivityTimer);
-
-            botInactivityTimer = setInterval(() => {
-                if (isChatEndedByTimer) {
-                    clearInterval(botInactivityTimer);
-                    return;
-                }
-
-                timeLeft--;
-                console.log(`Kapanmaya kalan süre: ${timeLeft} sn`);
-
-                if (timeLeft <= 0) {
-                    clearInterval(botInactivityTimer);
-                    isChatEndedByTimer = true;
-                                                
-                    const messagePayload = { type: 'AGENTFORCE_TIMEOUT_TRIGGERED' };
-
-                    window.postMessage(messagePayload, '*');
-                    
-                    document.querySelectorAll('iframe').forEach(iframe => {
-                        try {
-                            iframe.contentWindow.postMessage(messagePayload, '*');
-                        } catch(e) {
-                        }
-                    });
-                }
-            }, 1000);
-        }
-
-        window.addEventListener('mousemove', resetBotTimer);
-        window.addEventListener('keydown', resetBotTimer);
-        window.addEventListener('click', resetBotTimer);
-
-        setInterval(() => {
-            if (document.activeElement && document.activeElement.tagName === 'IFRAME') {
-                console.log('Kullanıcı Iframe içinde aktif! Sayaç sıfırlanıyor...');
-                resetBotTimer(); 
-            }
-        }, 1000);
-
-        resetBotTimer();
 
         function changeUrlPath(langFolder) {
             window.location.href = '/sunny-ai-agenttest/' + langFolder;
