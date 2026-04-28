@@ -128,6 +128,73 @@
     <script>
 
 
+        // --- AGENTFORCE INACTIVITY TIMER (HOST) ---
+
+        let botInactivityTimer;
+        const TIMEOUT_SECONDS = 5 * 60; // 5 dakika (Test için 60 yapabilirsiniz)
+        let timeLeft = TIMEOUT_SECONDS;
+        let isChatEndedByTimer = false;
+
+        function resetBotTimer() {
+            if (isChatEndedByTimer) return;
+
+            timeLeft = TIMEOUT_SECONDS;
+            // console.log(`[Host] Hareket algılandı, sayaç sıfırlandı. Kalan: ${timeLeft} sn`);
+
+            clearInterval(botInactivityTimer);
+
+            botInactivityTimer = setInterval(() => {
+                if (isChatEndedByTimer) {
+                    clearInterval(botInactivityTimer);
+                    return;
+                }
+
+                timeLeft--;
+
+                if (timeLeft <= 0) {
+                    clearInterval(botInactivityTimer);
+                    isChatEndedByTimer = true;
+                                                
+                    const messagePayload = { type: 'AGENTFORCE_TIMEOUT_TRIGGERED' };
+
+                    // Host window'a gönder
+                    window.postMessage(messagePayload, '*');
+                    
+                    // Sayfadaki tüm iframe'lere (Chat LWC'sine) gönder
+                    document.querySelectorAll('iframe').forEach(iframe => {
+                        try {
+                            iframe.contentWindow.postMessage(messagePayload, '*');
+                        } catch(e) {
+                            // Cross-origin güvenlik hatalarını yoksay
+                        }
+                    });
+                }
+            }, 1000);
+        }
+
+        // 1. Ana web sitesindeki fare, klavye ve tıklama hareketlerini dinle
+        window.addEventListener('mousemove', resetBotTimer);
+        window.addEventListener('keydown', resetBotTimer);
+        window.addEventListener('click', resetBotTimer);
+
+        // 2. LWC'den (Iframe'den) gelen "Kullanıcı chatte yazıyor" sinyalini dinle
+        window.addEventListener('message', (event) => {
+            if (event?.data?.type === 'USER_ACTIVE_IN_CHAT') {
+                resetBotTimer();
+            }
+        });
+
+        // 3. (Opsiyonel Güvenlik) Iframe içine odaklanıldığında sayacı sıfırla
+        setInterval(() => {
+            if (document.activeElement && document.activeElement.tagName === 'IFRAME') {
+                resetBotTimer(); 
+            }
+        }, 1000);
+
+        // Sistemi başlat
+        resetBotTimer();
+
+
         function changeUrlPath(langFolder) {
             window.location.href = '/sunny-ai-agenttest/' + langFolder;
         }
