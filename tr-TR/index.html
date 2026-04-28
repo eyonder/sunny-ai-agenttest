@@ -131,16 +131,15 @@
         // --- AGENTFORCE INACTIVITY TIMER (HOST) ---
 
         let botInactivityTimer;
-        const TIMEOUT_SECONDS = 15; // 5 dakika (Test için 60 yapabilirsiniz)
-        let timeLeft = TIMEOUT_SECONDS;
+        const TIMEOUT_SECONDS = 15;
+        let expireTime = 0;
         let isChatEndedByTimer = false;
 
         function resetBotTimer() {
             if (isChatEndedByTimer) return;
 
-            timeLeft = TIMEOUT_SECONDS;
-            // Buradaki logu sildik veya sadece "sıfırlandı" bilgisi verecek şekilde değiştirdik
-            // console.log("Fare/Klavye hareketi algılandı, sayaç sıfırlandı.");
+            // Kapanış hedefini GERÇEK SAAT üzerinden hesapla (Şu an + Timeout süresi)
+            expireTime = Date.now() + (TIMEOUT_SECONDS * 1000);
 
             clearInterval(botInactivityTimer);
 
@@ -150,15 +149,17 @@
                     return;
                 }
 
-                timeLeft--;
-                
-                // GERİ SAYIMI BURADA GÖREBİLİRİZ
-                console.log(`Geri sayım: ${timeLeft} sn`);
+                // Kalan süreyi matematikle bul: (Hedef Saat - Şu Anki Saat)
+                const timeLeft = Math.ceil((expireTime - Date.now()) / 1000);
 
-                if (timeLeft <= 0) {
+                if (timeLeft > 0) {
+                    console.log(`⏳ Geri sayım: ${timeLeft} sn`);
+                } else {
+                    // Fark 0 veya eksiyse (sekme arkada uyumuş bile olsa) süremiz dolmuş demektir!
                     clearInterval(botInactivityTimer);
                     isChatEndedByTimer = true;
-                                        
+                    console.log('🚨 Süre doldu (Sekme arkada olsa bile)! Kapatma sinyali gönderiliyor...');
+                                                
                     const messagePayload = { type: 'AGENTFORCE_TIMEOUT_TRIGGERED' };
 
                     window.postMessage(messagePayload, '*');
@@ -170,19 +171,22 @@
                         }
                     });
                 }
-            }, 1000);
+            }, 1000); // Tarayıcı bunu arka planda yavaşlatsa bile, çalıştığı ilk an saate bakıp kapatacaktır.
         }
 
+        // 1. Ana web sitesindeki gerçek hareketleri dinle
         window.addEventListener('mousemove', resetBotTimer);
         window.addEventListener('keydown', resetBotTimer);
         window.addEventListener('click', resetBotTimer);
 
+        // 2. Chat (LWC) içindeki gerçek hareketleri dinle
         window.addEventListener('message', (event) => {
             if (event?.data?.type === 'USER_ACTIVE_IN_CHAT') {
                 resetBotTimer();
             }
         });
 
+        // Sistemi başlat
         resetBotTimer();
 
 
