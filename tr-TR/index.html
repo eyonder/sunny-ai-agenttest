@@ -153,12 +153,12 @@
                 const timeLeft = Math.ceil((expireTime - Date.now()) / 1000);
 
                 if (timeLeft > 0) {
-                    console.log(`⏳ Geri sayım: ${timeLeft} sn`);
+                    console.log(`Geri sayım: ${timeLeft} sn`);
                 } else {
                     // Fark 0 veya eksiyse (sekme arkada uyumuş bile olsa) süremiz dolmuş demektir!
                     clearInterval(botInactivityTimer);
                     isChatEndedByTimer = true;
-                    console.log('🚨 Süre doldu (Sekme arkada olsa bile)! Kapatma sinyali gönderiliyor...');
+                    console.log('Süre doldu (Sekme arkada olsa bile)! Kapatma sinyali gönderiliyor...');
                                                 
                     const messagePayload = { type: 'AGENTFORCE_TIMEOUT_TRIGGERED' };
 
