@@ -139,7 +139,8 @@
             if (isChatEndedByTimer) return;
 
             timeLeft = TIMEOUT_SECONDS;
-            console.log(`Kalan süre: ${timeLeft} sn`);
+            // Buradaki logu sildik veya sadece "sıfırlandı" bilgisi verecek şekilde değiştirdik
+            // console.log("Fare/Klavye hareketi algılandı, sayaç sıfırlandı.");
 
             clearInterval(botInactivityTimer);
 
@@ -150,11 +151,14 @@
                 }
 
                 timeLeft--;
+                
+                // GERİ SAYIMI BURADA GÖREBİLİRİZ
+                console.log(`Geri sayım: ${timeLeft} sn`);
 
                 if (timeLeft <= 0) {
                     clearInterval(botInactivityTimer);
                     isChatEndedByTimer = true;
-                                                
+                                        
                     const messagePayload = { type: 'AGENTFORCE_TIMEOUT_TRIGGERED' };
 
                     window.postMessage(messagePayload, '*');
