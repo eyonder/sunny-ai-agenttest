@@ -128,13 +128,12 @@
     <script>
 
         let botInactivityTimer;
-        const TIMEOUT_SECONDS = 15; // Canlıda 300 (5 dk) yapın
+        const TIMEOUT_SECONDS = 15;
         let expireTime = 0;
         let isChatEndedByTimer = false;
-        let isTimerActive = false; // Timer'ın sadece sohbet varken çalışması için yeni kilit
+        let isTimerActive = false;
 
         function resetBotTimer() {
-            // Eğer timer kilitliyse (sohbet kapandıysa) veya henüz aktif değilse çalışma
             if (isChatEndedByTimer || !isTimerActive) return;
 
             expireTime = Date.now() + (TIMEOUT_SECONDS * 1000);
@@ -154,7 +153,7 @@
                 } else {
                     clearInterval(botInactivityTimer);
                     isChatEndedByTimer = true;
-                    isTimerActive = false; // Sohbet bittiği için timer pasife çekilir
+                    isTimerActive = false;
                     
                     console.log('🚨 Süre doldu! Kapatma sinyali gönderiliyor...');
                     const messagePayload = { type: 'AGENTFORCE_TIMEOUT_TRIGGERED' };
@@ -167,29 +166,23 @@
             }, 1000);
         }
 
-        // MESAJ DİNLEYİCİSİ GÜNCELLENDİ
         window.addEventListener('message', (event) => {
-            // A. LWC'den "Sohbet Başladı" mesajı gelirse (İlk açılış veya yeniden açılış)
             if (event?.data?.type === 'CONVERSATION_STARTED') {
                 console.log('🚀 Sohbet algılandı! Timer başlatılıyor/sıfırlanıyor.');
-                isChatEndedByTimer = false; // Önceki kapanış kilidini aç
-                isTimerActive = true;       // Timer'ı yetkilendir
-                resetBotTimer();            // Timer'ı başlat
+                isChatEndedByTimer = false; 
+                isTimerActive = true;
+                resetBotTimer();
             }
 
-            // B. Chat içindeki hareketleri dinle
             if (event?.data?.type === 'USER_ACTIVE_IN_CHAT') {
                 resetBotTimer();
             }
         });
 
-        // Standart hareket dinleyicileri
         window.addEventListener('mousemove', resetBotTimer);
         window.addEventListener('keydown', resetBotTimer);
         window.addEventListener('click', resetBotTimer);
 
-        // DİKKAT: En alttaki resetBotTimer(); çağrısını SİLDİK. 
-        // Artık sadece CONVERSATION_STARTED geldiğinde başlayacak.
 
 
         function changeUrlPath(langFolder) {
