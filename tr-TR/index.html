@@ -168,7 +168,7 @@
 
         window.addEventListener('message', (event) => {
             if (event?.data?.type === 'CONVERSATION_STARTED') {
-                console.log('Sohbet algılandı! Timer başlatılıyor/sıfırlanıyor.');
+                console.log('Timer başlatılıyor/sıfırlanıyor.');
                 isChatEndedByTimer = false; 
                 isTimerActive = true;
                 resetBotTimer();
