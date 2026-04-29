@@ -127,18 +127,16 @@
 
     <script>
 
-
-        // --- AGENTFORCE INACTIVITY TIMER (HOST) ---
-
         let botInactivityTimer;
-        const TIMEOUT_SECONDS = 15;
+        const TIMEOUT_SECONDS = 15; // Canlıda 300 (5 dk) yapın
         let expireTime = 0;
         let isChatEndedByTimer = false;
+        let isTimerActive = false; // Timer'ın sadece sohbet varken çalışması için yeni kilit
 
         function resetBotTimer() {
-            if (isChatEndedByTimer) return;
+            // Eğer timer kilitliyse (sohbet kapandıysa) veya henüz aktif değilse çalışma
+            if (isChatEndedByTimer || !isTimerActive) return;
 
-            // Kapanış hedefini GERÇEK SAAT üzerinden hesapla (Şu an + Timeout süresi)
             expireTime = Date.now() + (TIMEOUT_SECONDS * 1000);
 
             clearInterval(botInactivityTimer);
@@ -149,45 +147,49 @@
                     return;
                 }
 
-                // Kalan süreyi matematikle bul: (Hedef Saat - Şu Anki Saat)
                 const timeLeft = Math.ceil((expireTime - Date.now()) / 1000);
 
                 if (timeLeft > 0) {
-                    console.log(`Geri sayım: ${timeLeft} sn`);
+                    console.log(`⏳ Geri sayım: ${timeLeft} sn`);
                 } else {
-                    // Fark 0 veya eksiyse (sekme arkada uyumuş bile olsa) süremiz dolmuş demektir!
                     clearInterval(botInactivityTimer);
                     isChatEndedByTimer = true;
-                    console.log('Süre doldu (Sekme arkada olsa bile)! Kapatma sinyali gönderiliyor...');
-                                                
+                    isTimerActive = false; // Sohbet bittiği için timer pasife çekilir
+                    
+                    console.log('🚨 Süre doldu! Kapatma sinyali gönderiliyor...');
                     const messagePayload = { type: 'AGENTFORCE_TIMEOUT_TRIGGERED' };
-
                     window.postMessage(messagePayload, '*');
                     
                     document.querySelectorAll('iframe').forEach(iframe => {
-                        try {
-                            iframe.contentWindow.postMessage(messagePayload, '*');
-                        } catch(e) {
-                        }
+                        try { iframe.contentWindow.postMessage(messagePayload, '*'); } catch(e) {}
                     });
                 }
-            }, 1000); // Tarayıcı bunu arka planda yavaşlatsa bile, çalıştığı ilk an saate bakıp kapatacaktır.
+            }, 1000);
         }
 
-        // 1. Ana web sitesindeki gerçek hareketleri dinle
-        window.addEventListener('mousemove', resetBotTimer);
-        window.addEventListener('keydown', resetBotTimer);
-        window.addEventListener('click', resetBotTimer);
-
-        // 2. Chat (LWC) içindeki gerçek hareketleri dinle
+        // MESAJ DİNLEYİCİSİ GÜNCELLENDİ
         window.addEventListener('message', (event) => {
+            // A. LWC'den "Sohbet Başladı" mesajı gelirse (İlk açılış veya yeniden açılış)
+            if (event?.data?.type === 'CONVERSATION_STARTED') {
+                console.log('🚀 Sohbet algılandı! Timer başlatılıyor/sıfırlanıyor.');
+                isChatEndedByTimer = false; // Önceki kapanış kilidini aç
+                isTimerActive = true;       // Timer'ı yetkilendir
+                resetBotTimer();            // Timer'ı başlat
+            }
+
+            // B. Chat içindeki hareketleri dinle
             if (event?.data?.type === 'USER_ACTIVE_IN_CHAT') {
                 resetBotTimer();
             }
         });
 
-        // Sistemi başlat
-        resetBotTimer();
+        // Standart hareket dinleyicileri
+        window.addEventListener('mousemove', resetBotTimer);
+        window.addEventListener('keydown', resetBotTimer);
+        window.addEventListener('click', resetBotTimer);
+
+        // DİKKAT: En alttaki resetBotTimer(); çağrısını SİLDİK. 
+        // Artık sadece CONVERSATION_STARTED geldiğinde başlayacak.
 
 
         function changeUrlPath(langFolder) {
