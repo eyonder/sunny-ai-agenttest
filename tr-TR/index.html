@@ -182,7 +182,8 @@
         window.addEventListener('mousemove', resetBotTimer);
         window.addEventListener('keydown', resetBotTimer);
         window.addEventListener('click', resetBotTimer);
-
+        window.addEventListener('touchstart', resetBotTimer);
+        window.addEventListener('touchmove', resetBotTimer);
 
 
         function changeUrlPath(langFolder) {
