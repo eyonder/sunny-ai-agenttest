@@ -133,57 +133,56 @@
         let isChatEndedByTimer = false;
         let isTimerActive = false;
 
-        function resetBotTimer() {
+        function updateExpireTime() {
             if (isChatEndedByTimer || !isTimerActive) return;
-
             expireTime = Date.now() + (TIMEOUT_SECONDS * 1000);
+        }
 
-            clearInterval(botInactivityTimer);
+        function startMainTimer() {
+            if (botInactivityTimer) return;
 
             botInactivityTimer = setInterval(() => {
-                if (isChatEndedByTimer) {
-                    clearInterval(botInactivityTimer);
-                    return;
-                }
+                if (!isTimerActive || isChatEndedByTimer) return;
 
-                const timeLeft = Math.ceil((expireTime - Date.now()) / 1000);
+                const now = Date.now();
+                const timeLeft = Math.ceil((expireTime - now) / 1000);
 
-                if (timeLeft > 0) {
-                    console.log(`Geri sayım: ${timeLeft} sn`);
-                } else {
-                    clearInterval(botInactivityTimer);
-                    isChatEndedByTimer = true;
-                    isTimerActive = false;
-                    
-                    console.log('Süre doldu! Kapatma sinyali gönderiliyor...');
-                    const messagePayload = { type: 'AGENTFORCE_TIMEOUT_TRIGGERED' };
-                    window.postMessage(messagePayload, '*');
-                    
-                    document.querySelectorAll('iframe').forEach(iframe => {
-                        try { iframe.contentWindow.postMessage(messagePayload, '*'); } catch(e) {}
-                    });
-                }
+                if (timeLeft <= 0) {
+                    stopTimerAndExecute();
+                } 
             }, 1000);
         }
 
+        function stopTimerAndExecute() {
+            clearInterval(botInactivityTimer);
+            botInactivityTimer = null;
+            isChatEndedByTimer = true;
+            isTimerActive = false;
+
+            console.log('Süre doldu!');
+            const messagePayload = { type: 'AGENTFORCE_TIMEOUT_TRIGGERED' };
+            window.postMessage(messagePayload, '*');
+            
+            document.querySelectorAll('iframe').forEach(iframe => {
+                try { iframe.contentWindow.postMessage(messagePayload, '*'); } catch(e) {}
+            });
+        }
+
+        window.addEventListener('mousemove', updateExpireTime);
+        window.addEventListener('keydown', updateExpireTime);
+        window.addEventListener('click', updateExpireTime);
+
         window.addEventListener('message', (event) => {
             if (event?.data?.type === 'CONVERSATION_STARTED') {
-                console.log('Timer başlatılıyor/sıfırlanıyor.');
                 isChatEndedByTimer = false; 
                 isTimerActive = true;
-                resetBotTimer();
+                updateExpireTime();
+                startMainTimer();
             }
-
             if (event?.data?.type === 'USER_ACTIVE_IN_CHAT') {
-                resetBotTimer();
+                updateExpireTime();
             }
         });
-
-        window.addEventListener('mousemove', resetBotTimer);
-        window.addEventListener('keydown', resetBotTimer);
-        window.addEventListener('click', resetBotTimer);
-        window.addEventListener('touchstart', resetBotTimer);
-        window.addEventListener('touchmove', resetBotTimer);
 
 
         function changeUrlPath(langFolder) {
