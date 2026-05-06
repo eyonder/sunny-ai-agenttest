@@ -139,15 +139,15 @@
         }
     });
 
-    function handleOpenChat() {
+    window.handleOpenChat = function() {
         if (typeof window.openSalesforceChat === "function") {
             window.openSalesforceChat();
         } else {
             console.warn("Salesforce openSalesforceChat fonksiyonu bulunamadı.");
         }
-    }
+    };
 
-    function changeUrlPath(langFolder) {
+    window.changeUrlPath= function(langFolder) {
         window.location.href = '/sunny-ai-agenttest/' + langFolder;
     }
 
