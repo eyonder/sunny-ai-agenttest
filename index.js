@@ -139,6 +139,10 @@
         }
     });
 
+    handleOpenChat = function(){
+        window.openSalesforceChat();
+    }
+
     var _isProcessing = false; 
     window.openSalesforceChat = function() {
         var container = document.querySelector('embeddedservice-chat-container') || 
