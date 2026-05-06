@@ -147,6 +147,10 @@
         }
     }
 
+    function changeUrlPath(langFolder) {
+        window.location.href = '/sunny-ai-agenttest/' + langFolder;
+    }
+
     var _isProcessing = false; 
     window.openSalesforceChat = function() {
         var container = document.querySelector('embeddedservice-chat-container') || 
