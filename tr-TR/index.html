@@ -133,6 +133,15 @@
         let isChatEndedByTimer = false;
         let isTimerActive = false;
 
+        function checkExistingSession() {
+            if (sessionStorage.getItem('isChatActive') === 'true') {
+                isChatEndedByTimer = false;
+                isTimerActive = true;
+                updateExpireTime();
+                startMainTimer();
+            }
+        }
+
         function updateExpireTime() {
             if (isChatEndedByTimer || !isTimerActive) return;
             expireTime = Date.now() + (TIMEOUT_SECONDS * 1000);
@@ -159,6 +168,8 @@
             isChatEndedByTimer = true;
             isTimerActive = false;
 
+            sessionStorage.setItem('isChatActive', 'false');
+
             console.log('Süre doldu!');
             const messagePayload = { type: 'AGENTFORCE_TIMEOUT_TRIGGERED' };
             window.postMessage(messagePayload, '*');
@@ -176,6 +187,9 @@
             if (event?.data?.type === 'CONVERSATION_STARTED') {
                 isChatEndedByTimer = false; 
                 isTimerActive = true;
+                
+                sessionStorage.setItem('isChatActive', 'true'); 
+                
                 updateExpireTime();
                 startMainTimer();
             }
@@ -183,6 +197,8 @@
                 updateExpireTime();
             }
         });
+
+        checkExistingSession();
 
 
         function changeUrlPath(langFolder) {
