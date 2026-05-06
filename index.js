@@ -16,7 +16,7 @@
     }
 
     let botInactivityTimer;
-    const TIMEOUT_SECONDS = 60;
+    const TIMEOUT_SECONDS = 60 * 5;
     let expireTime = 0;
     let isChatEndedByTimer = false;
     let isTimerActive = false;
