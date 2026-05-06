@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
     
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    <!-- <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
     j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-PK6SNFGP');</script>
+    })(window,document,'script','dataLayer','GTM-PK6SNFGP');</script> -->
     
     
     
@@ -83,8 +83,8 @@
 </head>
 <body>
     
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PK6SNFGP"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PK6SNFGP"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript> -->
     
     
 
@@ -125,214 +125,8 @@
 
     <button class="sunny-trigger-btn" onclick="handleOpenChat()">Sunny</button>
 
-    <script>
+    <script src="../index.js"></script>
+    <script type="text/javascript" src="https://sunexpress--qa.sandbox.my.site.com/ESWSunexpressWebChannel1773001853439/assets/js/bootstrap.min.js" onload="initEmbeddedMessaging()"></script>
 
-        let botInactivityTimer;
-        const TIMEOUT_SECONDS = 60;
-        let expireTime = 0;
-        let isChatEndedByTimer = false;
-        let isTimerActive = false;
-
-        function checkExistingSession() {
-            if (sessionStorage.getItem('isChatActive') === 'true') {
-                isChatEndedByTimer = false;
-                isTimerActive = true;
-                updateExpireTime();
-                startMainTimer();
-            }
-        }
-
-        function updateExpireTime() {
-            if (isChatEndedByTimer || !isTimerActive) return;
-            expireTime = Date.now() + (TIMEOUT_SECONDS * 1000);
-        }
-
-        function startMainTimer() {
-            if (botInactivityTimer) return;
-
-            botInactivityTimer = setInterval(() => {
-                if (!isTimerActive || isChatEndedByTimer) return;
-
-                const now = Date.now();
-                const timeLeft = Math.ceil((expireTime - now) / 1000);
-
-                if (timeLeft <= 0) {
-                    stopTimerAndExecute();
-                } 
-            }, 1000);
-        }
-
-        function stopTimerAndExecute() {
-            clearInterval(botInactivityTimer);
-            botInactivityTimer = null;
-            isChatEndedByTimer = true;
-            isTimerActive = false;
-
-            sessionStorage.setItem('isChatActive', 'false');
-
-            console.log('Süre doldu!');
-            const messagePayload = { type: 'AGENTFORCE_TIMEOUT_TRIGGERED' };
-            window.postMessage(messagePayload, '*');
-            
-            document.querySelectorAll('iframe').forEach(iframe => {
-                try { iframe.contentWindow.postMessage(messagePayload, '*'); } catch(e) {}
-            });
-        }
-
-        window.addEventListener('mousemove', updateExpireTime);
-        window.addEventListener('keydown', updateExpireTime);
-        window.addEventListener('click', updateExpireTime);
-
-        window.addEventListener('message', (event) => {
-            if (event?.data?.type === 'CONVERSATION_STARTED') {
-                isChatEndedByTimer = false; 
-                isTimerActive = true;
-                
-                sessionStorage.setItem('isChatActive', 'true'); 
-                
-                updateExpireTime();
-                startMainTimer();
-            }
-            if (event?.data?.type === 'USER_ACTIVE_IN_CHAT') {
-                updateExpireTime();
-            }
-        });
-
-        checkExistingSession();
-
-
-        function changeUrlPath(langFolder) {
-            window.location.href = '/sunny-ai-agenttest/' + langFolder;
-        }
-
-        function handleOpenChat() {
-        if (typeof window.openSalesforceChat === "function") {
-            window.openSalesforceChat();
-        } else {
-            console.warn("Salesforce openSalesforceChat fonksiyonu bulunamadı.");
-        }
-    }
-    </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- <script type='text/javascript'>
-    let _conversationId = null;
-
-    // 1. İlgili klasöre yönlendirme yapan fonksiyon
-    function changeUrlPath(langFolder) {
-        // GitHub deponuzun ana dizinini baz alarak klasörlere yönlendirir
-        window.location.href = '/sunny-ai-agenttest/' + langFolder;
-    }
-
-    // 2. URL yoluna (pathname) bakarak dili belirleyen fonksiyon
-    function getLanguageFromPath() {
-        const path = window.location.pathname.toLowerCase();
-        
-        if (path.includes('/tr-tr')) {
-            return 'tr'; // Salesforce: Türkçe
-        } else if (path.includes('/de-de')) {
-            return 'de'; // Salesforce: Almanca
-        } else {
-            return 'en_US'; // Salesforce: Varsayılan İngilizce
-        }
-    }
-
-    // --- LWC DİNLEYİCİSİ ---
-    window.addEventListener('message', function(event) {
-        let currentLang = getLanguageFromPath();
-        if (currentLang === 'en_US') currentLang = 'en'; // LWC uyumluluğu için
-        
-        if (event.data === 'GET_LANGUAGE') {
-            event.source.postMessage({ 
-                type: 'LANGUAGE_RESPONSE', 
-                lang: currentLang 
-            }, event.origin);
-        }
-
-        if (event.data === 'GET_CHAT_DATA') {
-            event.source.postMessage({ 
-                type: 'CHAT_DATA_RESPONSE', 
-                lang: currentLang,
-                conversationId: _conversationId // Kaydedilen ID'yi gönder
-            }, event.origin);
-        }
-    });
-
-    window.addEventListener('onEmbeddedMessagingReady', () => {
-        console.log('Widget hazır!');
-        
-        const tryLaunchChat = () => {
-            try {
-                embeddedservice_bootstrap.utilAPI.launchChat()
-                    .then(() => {
-                        console.log('Chat açıldı');
-                    })
-                    .catch((err) => {
-                        setTimeout(tryLaunchChat, 500); 
-                    });
-            } catch (e) {
-                console.error('Error:', e);
-            }
-        };
-
-        setTimeout(tryLaunchChat, 1000);
-
-        window.addEventListener('onEmbeddedMessagingConversationStarted', (event) => {
-            console.log('conversationId yakalandı:', event.detail.conversationId);
-            _conversationId = event.detail.conversationId; // ID'yi global değişkene ata
-           
-            // Sohbet başladıktan sonra LWC'ye (iframe içine) anlık olarak yeni ID'yi push et
-            const iframes = document.querySelectorAll('iframe');
-            iframes.forEach(iframe => {
-                if (iframe.contentWindow) {
-                    iframe.contentWindow.postMessage({
-                        type: 'CONVERSATION_ID_UPDATE',
-                        conversationId: _conversationId
-                    }, '*');
-                }
-            });
-        });
-        
-    });
-
-    function initEmbeddedMessaging() {
-        try {
-            // 3. Dil tespiti yapılıyor ve Agent'a set ediliyor
-            const currentLang = getLanguageFromPath();
-            embeddedservice_bootstrap.settings.language = currentLang; 
-            
-            // Bilgi mesajını ekrana yazdıralım (Elementin sayfada olduğundan emin olmak için kontrol eklendi)
-            const infoElement = document.getElementById('current-lang-info');
-            if(infoElement) {
-                infoElement.innerText = "URL'den Algılanan Agent Dili: " + currentLang;
-            }
-
-            embeddedservice_bootstrap.init(
-                '00D7Z0000004r8W',
-                'Sunexpress_Web_Channel_V2D',
-                'https://sunexpress--qa.sandbox.my.site.com/ESWSunexpressWebChannel1773001853439',
-                {
-                    scrt2URL: 'https://sunexpress--qa.sandbox.my.salesforce-scrt.com'
-                }
-            );
-        } catch (err) {
-            console.error('Error loading Embedded Messaging: ', err);
-        }
-    };
-</script>
-<script type='text/javascript' src='https://sunexpress--qa.sandbox.my.site.com/ESWSunexpressWebChannel1773001853439/assets/js/bootstrap.min.js' onload='initEmbeddedMessaging()'></script> -->
 </body>
 </html>
