@@ -139,8 +139,12 @@
         }
     });
 
-    handleOpenChat = function(){
-        window.openSalesforceChat();
+    function handleOpenChat() {
+        if (typeof window.openSalesforceChat === "function") {
+            window.openSalesforceChat();
+        } else {
+            console.warn("Salesforce openSalesforceChat fonksiyonu bulunamadı.");
+        }
     }
 
     var _isProcessing = false; 
