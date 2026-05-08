@@ -282,7 +282,7 @@
         
             var style = document.createElement('style');
             // style.innerHTML = '#embedded-messaging { z-index: 999999 !important; } .embeddedMessagingFrame { z-index: 999999 !important; } .embeddedMessagingConversationButtonWrapper { z-index: 999999 !important; }';
-            style.innerHTML = '
+            style.innerHTML = `
             #embedded-messaging {
                 z-index: 999999 !important;
             }
@@ -310,7 +310,7 @@
             .embeddedMessagingPrechatModal {
                 display: none !important;
             }
-            ';
+            `;
             document.head.appendChild(style);
         
             embeddedservice_bootstrap.init(
