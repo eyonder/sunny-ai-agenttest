@@ -92,11 +92,72 @@
     checkExistingSession();
 
     window.addEventListener('message', function(event) {
+
+
+
+
+
+
+        if (event.data && event.data.type === 'START_CHAT_WITH_PRECHAT') {
+
+        const prechatData = event.data.prechatData;
+
+        console.log('Prechat data geldi:', prechatData);
+
+        try {
+
+            // Hidden prechat field set et
+            if (
+                window.embeddedservice_bootstrap &&
+                window.embeddedservice_bootstrap.prechatAPI
+            ) {
+
+                window.embeddedservice_bootstrap
+                    .prechatAPI
+                    .setHiddenPrechatFields(prechatData);
+
+                console.log('Prechat fieldlar set edildi');
+            }
+
+            // Chat başlat
+            if (
+                window.embeddedservice_bootstrap &&
+                window.embeddedservice_bootstrap.utilAPI
+            ) {
+
+                console.log('launchChat çağrılıyor');
+
+                window.embeddedservice_bootstrap
+                    .utilAPI
+                    .launchChat();
+            }
+
+        } catch (e) {
+
+            console.error('Prechat launch hatası:', e);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
         var currentLang = getLanguageFromPath();
         if (currentLang === 'en_US') currentLang = 'en';
         if (event.data === 'GET_LANGUAGE') {
             event.source.postMessage({ type: 'LANGUAGE_RESPONSE', lang: currentLang }, event.origin);
         }
+        
         if (event.data === 'GET_CHAT_DATA') {
             event.source.postMessage({
                 type: 'CHAT_DATA_RESPONSE',
