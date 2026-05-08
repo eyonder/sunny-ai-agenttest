@@ -248,12 +248,30 @@
             container.style.display = 'block';
             
             if (window.embeddedservice_bootstrap && embeddedservice_bootstrap.utilAPI) {
-                    embeddedservice_bootstrap.utilAPI.launchChat(); 
+                try {
+    embeddedservice_bootstrap
+        .userVerificationAPI
+        ?.clearSession({
+            shouldEndSession: true
+        });
+} catch(e) {}
+                    setTimeout(() => {
+    embeddedservice_bootstrap.utilAPI.launchChat();
+}, 300);
             }
         } 
         else {
             if (window.embeddedservice_bootstrap && embeddedservice_bootstrap.utilAPI) {
-                embeddedservice_bootstrap.utilAPI.launchChat();
+                try {
+    embeddedservice_bootstrap
+        .userVerificationAPI
+        ?.clearSession({
+            shouldEndSession: true
+        });
+} catch(e) {}
+                setTimeout(() => {
+    embeddedservice_bootstrap.utilAPI.launchChat();
+}, 300);
             }
         }
     };
