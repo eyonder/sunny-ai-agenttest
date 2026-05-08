@@ -93,86 +93,8 @@
 
 
 
-        window.addEventListener(
-    "onEmbeddedMessagingConversationClosed",
-    function () {
-
-        try {
-            embeddedservice_bootstrap
-                .userVerificationAPI
-                ?.clearSession({
-                    shouldEndSession: true
-                });
-        } catch(e) {}
-
-        try {
-            embeddedservice_bootstrap
-                .utilAPI
-                ?.removeAllComponents();
-        } catch(e) {}
-
-        try {
-            embeddedservice_bootstrap
-                .utilAPI
-                ?.hideChatButton();
-        } catch(e) {}
-    }
-);
 
     window.addEventListener('message', function(event) {
-
-
-
-
-
-
-        if (event.data && event.data.type === 'START_CHAT_WITH_PRECHAT') {
-
-        const prechatData = event.data.prechatData;
-
-        console.log('Prechat data geldi:', prechatData);
-
-        try {
-
-            // Hidden prechat field set et
-            if (
-                window.embeddedservice_bootstrap &&
-                window.embeddedservice_bootstrap.prechatAPI
-            ) {
-
-                window.embeddedservice_bootstrap
-                    .prechatAPI
-                    .setHiddenPrechatFields(prechatData);
-
-                console.log('Prechat fieldlar set edildi');
-            }
-
-            // Chat başlat
-            if (
-                window.embeddedservice_bootstrap &&
-                window.embeddedservice_bootstrap.utilAPI
-            ) {
-
-                console.log('launchChat çağrılıyor');
-
-                window.embeddedservice_bootstrap
-                    .utilAPI
-                    .launchChat();
-            }
-
-        } catch (e) {
-
-            console.error('Prechat launch hatası:', e);
-        }
-    }
-
-
-
-
-
-
-
-
 
 
 
@@ -248,30 +170,15 @@
             container.style.display = 'block';
             
             if (window.embeddedservice_bootstrap && embeddedservice_bootstrap.utilAPI) {
-                try {
-    embeddedservice_bootstrap
-        .userVerificationAPI
-        ?.clearSession({
-            shouldEndSession: true
-        });
-} catch(e) {}
-                    setTimeout(() => {
-    embeddedservice_bootstrap.utilAPI.launchChat();
-}, 300);
+
+                embeddedservice_bootstrap.utilAPI.launchChat();
             }
         } 
         else {
             if (window.embeddedservice_bootstrap && embeddedservice_bootstrap.utilAPI) {
-                try {
-    embeddedservice_bootstrap
-        .userVerificationAPI
-        ?.clearSession({
-            shouldEndSession: true
-        });
-} catch(e) {}
-                setTimeout(() => {
-    embeddedservice_bootstrap.utilAPI.launchChat();
-}, 300);
+
+                embeddedservice_bootstrap.utilAPI.launchChat();
+
             }
         }
     };
