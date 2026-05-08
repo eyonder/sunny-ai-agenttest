@@ -91,6 +91,34 @@
 
     checkExistingSession();
 
+
+
+        window.addEventListener(
+    "onEmbeddedMessagingConversationClosed",
+    function () {
+
+        try {
+            embeddedservice_bootstrap
+                .userVerificationAPI
+                ?.clearSession({
+                    shouldEndSession: true
+                });
+        } catch(e) {}
+
+        try {
+            embeddedservice_bootstrap
+                .utilAPI
+                ?.removeAllComponents();
+        } catch(e) {}
+
+        try {
+            embeddedservice_bootstrap
+                .utilAPI
+                ?.hideChatButton();
+        } catch(e) {}
+    }
+);
+
     window.addEventListener('message', function(event) {
 
 
