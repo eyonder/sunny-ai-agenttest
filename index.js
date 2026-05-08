@@ -281,36 +281,8 @@
             embeddedservice_bootstrap.settings.enableUserInputForConversationWithBot = false;  
         
             var style = document.createElement('style');
-            // style.innerHTML = '#embedded-messaging { z-index: 999999 !important; } .embeddedMessagingFrame { z-index: 999999 !important; } .embeddedMessagingConversationButtonWrapper { z-index: 999999 !important; }';
-            style.innerHTML = `
-            #embedded-messaging {
-                z-index: 999999 !important;
-            }
-            
-            .embeddedMessagingFrame {
-                z-index: 999999 !important;
-            }
-            
-            .embeddedMessagingConversationButtonWrapper {
-                z-index: 999999 !important;
-            }
-            
-            embeddedservice-prechat {
-                display: none !important;
-            }
-            
-            .embeddedMessagingPrechatForm {
-                display: none !important;
-            }
-            
-            .embeddedMessagingPrechat {
-                display: none !important;
-            }
-            
-            .embeddedMessagingPrechatModal {
-                display: none !important;
-            }
-            `;
+            style.innerHTML = '#embedded-messaging { z-index: 999999 !important; } .embeddedMessagingFrame { z-index: 999999 !important; } .embeddedMessagingConversationButtonWrapper { z-index: 999999 !important; }';
+
             document.head.appendChild(style);
         
             embeddedservice_bootstrap.init(
