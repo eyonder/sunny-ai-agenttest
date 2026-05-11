@@ -3,11 +3,31 @@
     var _conversationId = null;
     var _chatReady = false;
     window.addEventListener('onEmbeddedMessagingButtonCreated', function() {
-        console.log('Buton oluştu');
-        if (window.embeddedservice_bootstrap && embeddedservice_bootstrap.utilAPI) {
-            console.log('Buton kapanıyor');
-            embeddedservice_bootstrap.utilAPI.hideChatButton();
-        }
+
+
+
+console.log('Buton oluştu');
+        setTimeout(function() {
+            try {
+                if (window.embeddedservice_bootstrap && embeddedservice_bootstrap.utilAPI) {
+                    console.log('Buton kapanıyor');
+                    embeddedservice_bootstrap.utilAPI.hideChatButton();
+                }
+            } catch(e) {
+                console.error('Buton gizlenemedi:', e);
+            }
+        }, 300);
+
+
+
+
+
+
+
+
+
+        
+
     });
 
     function getLanguageFromPath() {
