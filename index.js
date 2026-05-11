@@ -3,7 +3,9 @@
     var _conversationId = null;
     var _chatReady = false;
     window.addEventListener('onEmbeddedMessagingButtonCreated', function() {
+        console.log('Buton oluştu');
         if (window.embeddedservice_bootstrap && embeddedservice_bootstrap.utilAPI) {
+            console.log('Buton kapanıyor');
             embeddedservice_bootstrap.utilAPI.hideChatButton();
         }
     });
