@@ -13,7 +13,16 @@ console.log('Buton oluştu');
                             document.querySelector('.embeddedMessagingFrame');
             if (container) {
                 console.log('Buton kapanıyor container');
-                container.style.display = 'none';
+
+                        setTimeout(function() {
+            
+            container.style.display = 'none';
+            
+
+        }, 30); 
+
+                
+                
             }
             if (window.embeddedservice_bootstrap && embeddedservice_bootstrap.utilAPI) {
                 console.log('Buton kapanıyor hideChatButton');
