@@ -6,17 +6,19 @@
 
 
 
+
 console.log('Buton oluştu');
-        setTimeout(function() {
-            try {
-                if (window.embeddedservice_bootstrap && embeddedservice_bootstrap.utilAPI) {
-                    console.log('Buton kapanıyor');
-                    embeddedservice_bootstrap.utilAPI.hideChatButton();
-                }
-            } catch(e) {
-                console.error('Buton gizlenemedi:', e);
+        var container = document.querySelector('.embeddedServiceSidebarMinimizedDefaultUI') ||
+                            document.querySelector('embeddedservice-chat-container') ||
+                            document.querySelector('.embeddedMessagingFrame');
+            if (container) {
+                console.log('Buton kapanıyor container');
+                container.style.display = 'none';
             }
-        }, 300);
+            if (window.embeddedservice_bootstrap && embeddedservice_bootstrap.utilAPI) {
+                console.log('Buton kapanıyor hideChatButton');
+                embeddedservice_bootstrap.utilAPI.hideChatButton();
+            }
 
 
 
