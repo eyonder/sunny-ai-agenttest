@@ -150,7 +150,17 @@ console.log('Buton oluştu');
         }
         if (event.data && event.data.type === 'CLEAR_EMBEDDED_SESSION') {
             if (window.embeddedservice_bootstrap.userVerificationAPI) {
-                window.embeddedservice_bootstrap.userVerificationAPI.clearSession();
+                
+
+                        setTimeout(function() {
+            
+            window.embeddedservice_bootstrap.userVerificationAPI.clearSession();
+            
+            _isProcessing = false; 
+            }, 300); 
+
+
+                
             }
         }
         if (event.data.type === 'FORCE_HIDE_WIDGET') {
